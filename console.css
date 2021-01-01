@@ -1,0 +1,132 @@
+:root{
+	--temp-colour: #CCCCCC;
+	--temp-min-colour: #0000CC;
+	--temp-max-colour: #CC0000;
+	--page-text-colour: #DDDDDD;
+	--titles-colour: #FFFFFF;
+	--page-background-colour: #222222;
+	--wind-needle-colour: #FF5555;
+	--wind-gauge-colour: #0077bb;
+}
+
+
+
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  	background-color: var(--page-background-colour);
+	color: var(--page-text-colour);
+	font-size: 2vw;
+}
+
+.obs_title{
+	color: var(--titles-colour); font-size:90%;
+}
+
+.air_temperature_min, .air_temperature_min_time{
+ color: var(--temp-min-colour);
+}
+
+.air_temperature_max, .air_temperature_max_time{
+ color: var(--temp-max-colour);
+}
+
+.air_temperature_max_time, .air_temperature_min_time {
+font-size:60%;
+}
+
+.air_temperature_min, .air_temperature_max{
+ font-size:70%;
+}
+
+
+
+.air_temperature_title { grid-area: 1 / 1 / 1 / 13;
+  align-self:center;justify-self:center;text-align:center;}
+.air_temperature { font-size: 300%;grid-area: 2 /1/2 / 13; align-self: center;justify-self:center; text-align:center; }
+.air_temperature_min { grid-area: 3/1 /3/ 7;   align-self: end;justify-self:center; text-align:center; }
+.air_temperature_max { grid-area: 3/7/3 / 13; align-self: end;justify-self:center; text-align:center; }
+.air_temperature_min_time { grid-area: 4/1/4 / 7;  align-self: start;justify-self:center; text-align:center; }
+.air_temperature_max_time { grid-area: 4/7/4/ 13;  align-self: start;justify-self:center; text-align:center; }
+
+
+.temperature-container {
+	display:grid;
+	
+	grid-template-columns: repeat(12,1fr);
+	grid-template-rows: 20px 6fr 1fr 1fr ;
+
+}
+
+
+
+.chart_title { grid-area: 1 ;
+  align-self:center;justify-self:center;text-align:center;}
+.chart { grid-area: 2 ;
+  align-self:center;justify-self:center;}
+ .wind-records{grid-area:3;align-self:center;justify-self:center;font-size:50%;}
+
+  .wind-container {
+	display:grid;
+	
+	
+	grid-template-columns: 1fr;
+	grid-template-rows: 20px 8fr 1fr;
+
+}
+
+
+.chart-container {
+	display:grid;
+	
+	
+	grid-template-columns: 1fr;
+	grid-template-rows: 20px 1fr ;
+
+}
+
+
+
+
+.date {font-size:90%;grid-area: 1/1/1/5;align-self: end;justify-self:center; text-align:center; }
+.time {grid-area: 2/1/2/5;justify-self:center; text-align:center; }
+
+.battery_title {font-size: 60%;grid-area: 3/1/3/3;align-self: center;justify-self:center; text-align:center; }
+.power_mode_title {font-size: 60%;grid-area: 3/3/3/5;align-self: center;justify-self:center; text-align:center; }
+.battery { font-size: 75%;grid-area: 4/1/4/3;align-self: center;justify-self:center; text-align:center; }
+.power_mode {font-size: 75%;grid-area:4/3/4/5;align-self: center;justify-self:center; text-align:center; }
+
+
+
+
+.datebattery-container {
+	display:grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-rows: 2fr 2fr 1fr 1fr ;
+}
+
+
+.sunrise_image {font-size:60%;grid-area: 1/1/1/2;align-self: center;justify-self:center; text-align:center; }
+.solarnoon_image {font-size:60%;grid-area: 1/2/1/3;align-self: center;justify-self:center; text-align:center; }
+.sunrise_time {font-size:75%;grid-area: 2/1/2/2;align-self: center;justify-self:center; text-align:center; }
+.solarnoon_time {font-size:75%;grid-area:2/2/2/3;align-self: center;justify-self:center; text-align:center; }
+.sunset_image {font-size:60%;grid-area: 1/3/1/4;align-self: center;justify-self:center; text-align:center; }
+.sunset_time {font-size:75%;grid-area: 2/3/2/4;align-self: center;justify-self:center; text-align:center; }
+.ephemeris-container {
+	display:grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr ;
+}
+
+
+.console-container {
+	display:grid;
+	grid-gap: 10px;
+	padding:20px;
+	width: calc(100vw-40px);
+	height: calc(100vh - 40px);
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: 5fr 1fr 1fr 1fr;
+	
+}
