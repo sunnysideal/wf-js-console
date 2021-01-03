@@ -13,6 +13,6 @@ Device ID: Settings -> Stations -> <your station> -> Status, then find the Devic
 
 This information is then only stored in your browser storage.
 
-You can either launch the web page from https://wx.paton.online/console or download the source files from here and launch locally.
+You can either launch the web page from https://www.wxconsole.in.net or download the source files from here and launch locally.
 
 This is a project I created to teach myself about JS and HTML5 so it's probably rough around the edges, sorry, not sorry!
