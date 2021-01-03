@@ -107,7 +107,7 @@ var tempestObsFields=['time_epoch', 'wind_lull', 'wind_avg', 'wind_gust', 'wind_
 var rapidWindObsFields=['time_epoch','wind_speed','wind_direction'];
 // for when bucket = 1440 minutes, different format from WF rest API
 var obsSummaryFields=[ 'TIMESTAMP', 'PRESSURE', 'PRESSURE_HIGH','PRESSURE_LOW','TEMP','TEMP_HIGH','TEMP_LOW','HUMIDITY', 'HUMIDITY_HIGH', 'HUMIDITY_LOW', 'LUX', 'LUX_HIGH', 'LUX_LOW', 'UV', 'UV_HIGH', 'UV_LOW', 'SOLAR_RADIATION', 'SOLAR_RADIATION_HIGH', 'SOLAR_RADIATION_LOW', 'WIND_AVG', 'WIND_GUST', 'WIND_LULL', 'WIND_DIR', 'WIND_INTERVAL', 'STRIKE_COUNT', 'STRIKE_AVG_DISTANCE', 'RECORD_COUNT', 'BATTERY', 'PRECIP_ACCUM_TODAY_LOCAL', 'PRECIP_ACCUM_TODAY_LOCAL_FINAL', 'PRECIP_MINS_TODAY_LOCAL', 'PRECIP_MINS_TODAY_LOCAL_FINAL', 'PRECIP_TYPE', 'PRECIP_ANALYSIS_TYPE']; 
-
+var wspeed = [];
 // custom derived fields map
 var derivedFields=['power_mode','obs_time'];
 
@@ -115,6 +115,16 @@ var derivedFields=['power_mode','obs_time'];
 function cssvar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name);
 }
+// update elements from tempest obs
+function updateObsArray(observation,index){
+	updateHTML(tempestObsFields[index],observation);
+}
+
+function updateHTML(updateElement,value){
+	if(document.getElementById(updateElement)){
+		document.getElementById(updateElement).innerHTML = value;
+	}
+}// end updateHTML
 
 function cardinal(deg){
 	 if (deg>11.25 && deg<=33.75){
@@ -150,8 +160,55 @@ function cardinal(deg){
   }else{
     return "N"; 
   }
-	
+}// end cardinal
+// Beaufort Wind Force Scale based on data at https://www.rmets.org/resource/beaufort-scale
+function beaufort(mps){
+	kph=mps*3.6;
+	if(kph <1)
+		return 0;
+	else if (kph < 6)
+		return 1;
+	else if (kph < 12)
+		return 2;
+	else if (kph < 20)
+		return 3;
+	else if (kph < 29)
+		return 4;
+	else if (kph < 38)
+		return 5;
+	else if (kph < 50)
+		return 6;
+	else if (kph < 62)
+		return 7;
+	else if (kph < 75)
+		return 8;
+	else if (kph < 89)
+		return 9;
+	else if (kph < 103)
+		return 10;
+	else if (kph < 118)
+		return 11;
+	else
+		return 12;
 }
+
+
+beaufortWindForceScale = [
+{Description:'Calm',Specification:'Smoke rises vertically'},
+{Description:'Light Air',Specification:'Direction shown by smoke drift but not by wind vanes'},
+{Description:'Light Breeze',Specification:'Wind felt on face; leaves rustle; wind vane moved by wind'},
+{Description:'Gentle Breeze',Specification:'Leaves and small twigs in constant motion; light flags extended'},
+{Description:'Moderate Breeze',Specification:'Raises dust and loose paper; small branches moved.'},
+{Description:'Fresh Breeze',Specification:'Small trees in leaf begin to sway; crested wavelets form on inland waters.'},
+{Description:'Strong Breeze',Specification:'Large branches in motion; whistling heard in telegraph wires; umbrellas used with difficulty.'},
+{Description:'Near Gale',Specification:'Whole trees in motion; inconvenience felt when walking against the wind.'},
+{Description:'Gale',Specification:'Twigs break off trees; generally impedes progress.'},
+{Description:'Strong Gale',Specification:'Slight structural damage (chimney pots and slates removed).'},
+{Description:'Storm',Specification:'Seldom experienced inland; trees uprooted; considerable structural damage'},
+{Description:'Violent Storm',Specification:'Very rarely experienced; accompanied by widespread damage.'},
+{Description:'Hurricane',Specification:'Devastation'}
+];
+	
 
 // return hours and minutes string in "hh:mm" format from epoch time
 function getHumanTimeHHMM(epoch){
@@ -162,107 +219,200 @@ function getHumanTimeHHMM(epoch){
 }
 
 // properties for the wind needle
-var needle = { base:15, height:33, degrees: 1, targetDegrees: 0, targetCardinal: "N",windSpeed:0,moving:0, direction:1, speed:3 }
+var needle = { base:15, height:33, degrees: 1, targetDegrees: 0, targetCardinal: "N",windSpeed:0,moving:0, direction:1, speed:3,bfDesc:"" }
 
+function initWind(){
+		//get DPI
+	let dpi = window.devicePixelRatio;
+	
+	//get canvas
+	let canvas = document.getElementById('wind');
+	//get context
+	let wind = canvas.getContext('2d');
+
+/*
+	function fix_dpi() {
+		//get CSS height
+		//the + prefix casts it to an integer
+		//the slice method gets rid of "px"
+		//computedStyles = getComputedStyle(canvas);
+		/*
+for (var i=0; i<computedStyles.length; i++)
+{        
+    console.log( computedStyles[i] + " " + computedStyles.getPropertyValue(computedStyles[i]));
+    
+}
+		let style_height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
+		//get CSS width
+		let style_width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
+		//scale the canvas
+		canvas.setAttribute('height', style_height * dpi);
+		canvas.setAttribute('width', style_width * dpi);
+	}// end fix-dpi
+*/
+//	fix_dpi();
+/*  
+	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2)*dpi;
+	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2)*dpi;
+*/	
+//https://www.geeksforgeeks.org/how-to-sharpen-blurry-text-in-html5-canvas/
+
+	//width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
+	//height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
+	//console.log(width+" "+height);
+	function parentWidth(elem) {
+    return elem.parentElement.clientWidth;
+}
+	function parentHeight(elem) {
+    return elem.parentElement.clientHeight;
+}
+
+width=parentWidth(document.getElementById('wind'));
+height=parentHeight(document.getElementById('wind'));
+	if(width>height)
+		size=height;
+	else
+		size=width;
+	       
+		   var scale = window.devicePixelRatio;
+        canvas.style.width = size + "px"; 
+        canvas.style.height = size + "px"; 
+		canvas.width = size*scale; 
+        canvas.height = size*scale; 
+		console.log(width + " " +height+" "+scale);
+		        
+		wind.scale(scale, scale);
+  
+  drawWind(needle);
+	
+	
+}
 
 function drawWind(needle) {
-//get DPI
-let dpi = window.devicePixelRatio;
-//get canvas
-let canvas = document.getElementById('wind');
-//get context
-let wind = canvas.getContext('2d');
+	let canvas = document.getElementById('wind');
+	//get context
+	let wind = canvas.getContext('2d');
 
-function fix_dpi() {
-//get CSS height
-//the + prefix casts it to an integer
-//the slice method gets rid of "px"
-let style_height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
-//get CSS width
-let style_width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-//scale the canvas
-canvas.setAttribute('height', style_height * dpi);
-canvas.setAttribute('width', style_width * dpi);
-//console.log(style_width*dpi+" "+style_width*dpi);
+	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
+	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);		
 
 
-}
+	 
 
-fix_dpi();
 	
-
-  
-width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2)*dpi;
-height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2)*dpi;
-//console.log(scale);
+	console.log("width:height "+width+" "+height);
+	
 	wind.clearRect(0, 0, width, height); // clear canvas
- wind.font = "30px Arial";
-	wind.lineWidth = 20;
-	scaleGauge=0.65;
+	
+	wind.lineWidth = height*0.04;
+	gaugeRadius = (-wind.lineWidth-height*0.1) +height/2;
+	windFontSize = height/10;
+	wind.font = windFontSize + "px Arial";
+	
+	needle.base=height*0.04;
+	needle.height = needle.base*3.5;
+
   	wind.fillStyle = cssvar('--page-text-colour');
 	wind.strokeStyle = cssvar('--wind-gauge-colour');
-  	  wind.textAlign = "center";
-  wind.fillText(needle.targetCardinal,width/2,-20+height/2);
-  wind.fillText(needle.windSpeed,width/2,20+height/2);
-  wind.beginPath();
+  	wind.textAlign = "center";
+	
+	// print wind direction and speed in centre of dial
+	wind.fillText(needle.targetCardinal,width/2,-1.3*windFontSize+height/2);
+	wind.fillText(Math.round(needle.windSpeed*10)/10+" m/s",width/2,height/2);
+	wind.fillText(needle.bfDesc,width/2,1.3*windFontSize+height/2);
+	
+	// draw dial
+	wind.beginPath();
   	wind.fillStyle = cssvar('--wind-needle-colour');
 	wind.strokeStyle = cssvar('--wind-gauge-colour');
-	wind.translate(width/2,+height/2);
-
-	//console.log("Width:" +newWidth+" Height: "+newHeight+" cW"+newWidth/2+" ch"+newHeight/2);
-
-  wind.arc(0, 0, -(0.20*height)+height/2, 0, Math.PI * 2); //draw outer arc
-
-  wind.stroke();
+	wind.translate(width/2,height/2);
+	wind.arc(0, 0, gaugeRadius, 0, Math.PI * 2); //draw outer arc
+	wind.stroke();
   
-  wind.beginPath();// start direction marker
-  wind.rotate(needle.degrees*Math.PI/180); //rotate to draw at current deg
-  wind.translate(0,-(-(0.20*height)+height/2)); // move to radius
-  wind.lineTo(needle.base,0);
-  wind.lineTo(0,needle.height);
-  wind.lineTo(-needle.base,0);
-  
-  wind.fill();
-  wind.translate(0,(4+(0.20*height)/2));//move back to centre
-  wind.rotate(-needle.degrees*Math.PI/180);//rotate back to beginning
-
-  
- // wind.translate(-newWidth/2,newHeight/2); // move to centre
-
-
+	// draw needle
+	wind.beginPath();
+	wind.rotate(needle.degrees*Math.PI/180); //rotate to draw at current deg
+	wind.translate(0,-gaugeRadius-wind.lineWidth/2); // move to radius
+	wind.lineTo(needle.base,0);
+	wind.lineTo(0,needle.height);
+	wind.lineTo(-needle.base,0);
+    wind.fill();
+	
+	wind.translate(0,gaugeRadius+wind.lineWidth/2);
+	wind.rotate(-needle.degrees*Math.PI/180);//rotate back to beginning
+	wind.translate(-width/2,-height/2);
+	
 }
 
-function loop()
-{
+function rotateWindNeedle(){
+	// get direction to move compass in 
+	change = needle.targetDegrees-needle.degrees;
+	if(change !=0){  // if there is a difference between current direction and new direction
+		if( (( change + 360) % 360 > 180) && needle.moving==0){ //(clockwise, anti-clockwise whichever is closest)
+			needle.direction = -1; // anti-clockwise
+		}
+		needle.moving=1; // to show that we've started animation
+		needle.degrees = needle.degrees+needle.direction; // add/remove degree per animation loop
+		// deal with 0/360 degree
+		if (needle.degrees > 359)
+			needle.degrees=0;
+		if (needle.degrees < 0)
+			needle.degrees=359;
+		// draw the canvas
+		drawWind(needle);
+		requestAnimationFrame(rotateWindNeedle);
+	}
+	else{ // current and target are now the same, animation complete
+		needle.moving=0;
+		needle.direction=1;
+	}
+}
 
+function updateDateTime(epoch){
+		var d = new Date(epoch*1000);
+		
+		date = days[d.getDay()]+", "+d.getDate() + " "+months[d.getMonth()]+" "+d.getFullYear();
+		time = pad(d.getHours(),2)+":"+pad(d.getMinutes(),2)+":"+pad(d.getSeconds(),2);
+		updateHTML("obs_date",date);
+		updateHTML("obs_time",time);
+} // end updateDateTime
 
-change = needle.targetDegrees-needle.degrees;
-	
-	
-
-if(change !=0){
-
-if( (( change + 360) % 360 > 180) && needle.moving==0)
-{
-
-	needle.direction = -1;
-  }
-  needle.moving=1;
+function pad(n, len) {
    
-needle.degrees = needle.degrees+needle.direction;
+    s = n.toString();
+    if (s.length < len) {
+        s = ('0000000000' + s).slice(-len);
+    }
 
-if (needle.degrees > 359)
-	needle.degrees=0;
-if (needle.degrees < 0)
-	needle.degrees=359;
+    return s;
+ }
 
-drawWind(needle);
-requestAnimationFrame(loop);
+const days = [
+  'Sun',
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat'
+];
 
-}
-else{
-needle.moving=0;
-needle.direction=1;
-}
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+];
+
+function browserResize(){
+	initWind();
 }
 

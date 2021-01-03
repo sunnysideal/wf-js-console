@@ -22,42 +22,42 @@ socket.onopen = function(e) {
 
 // function onmessage called when a websocket message arrives
 socket.onmessage = function(event) {
-
-// **********************************
-// parse data recieved from websocket
-// **********************************  
-var message  = JSON.parse(event.data);
+	/*
+	message = new Paho.MQTT.Message(event.data);
+	message.destinationName = "ssidewx/obs";
+	client.send(message);
+	*/
+	// **********************************		
+	// parse data recieved from websocket
+	// **********************************  
+	var message  = JSON.parse(event.data);
  
- // if message type is tempest observations 'obs_st'
- if ( message['type']=='obs_st')
- {
-  // extract array of observations from message and call parseObs function for each item in array 
-  //message['obs'][0].forEach(parseObs);
-  console.log("Should be parsing here");
-  parseTempest(message['obs'][0])
-  .then(() => updateOnObservations(message['obs'][0]))
- }
+	// if message type is tempest observations 'obs_st'
+	if ( message['type']=='obs_st'){
+		// extract array of observations from message and call parseObs function for each item in array 
+		parseTempest(message['obs'][0])
+		.then(() => updateOnObservations(message['obs'][0]))
+	}
 
- else if (message['type']=='rapid_wind')
-{
-  // extract observations from 'ob' array in rapid_wind message
-  message['ob'].forEach(parseRapidWind);
-}
+	else if (message['type']=='rapid_wind'){
+		// extract observations from 'ob' array in rapid_wind message
+		message['ob'].forEach(parseRapidWind);
+	}
+}// end websocket onmessage
 
-
- };
-// end function onmessage
-
-socket.onclose = function(event) { if (event.wasClean) { alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-  } else {
-    // e.g. server process killed or network down
-    // event.code is usually 1006 in this case
-    alert('[close] Connection died');
-  }
+socket.onclose = function(event) { 
+	if (event.wasClean) { 
+		alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+	} else {
+		// e.g. server process killed or network down
+		// event.code is usually 1006 in this case
+		alert('[close] Connection died');
+	}
 };
 
 socket.onerror = function(error) {
-  alert(`[error] ${error.message}`);
+	alert(`[error] ${error.message}`);
 };
 
-loop();
+// all initialised and ready to go
+//rotateWindNeedle();

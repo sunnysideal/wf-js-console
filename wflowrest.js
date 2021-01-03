@@ -1,3 +1,4 @@
+
 // ***************************
 // fetch observations
 // ***************************
@@ -5,122 +6,36 @@
 // structures to hold data
 var todayJSON = {};
 
-var obsToday = {
-	'time_epoch':[], 
-	'wind_lull':[], 
-	'wind_avg':[], 
-	'wind_gust':[], 
-	'wind_direction':[], 
-	'wind_sample_interval':[], 
-	'station_pressure':[], 
-	'air_temperature':[], 
-	'relative_humidity':[], 
-	'illuminance':[], 
-	'uv':[], 
-	'solar_radiation':[], 
-	'rain_accumulated':[], 
-	'precipitation_type':[], 
-	'lightning_strike_avg_distance':[], 
-	'lightning_strike_count':[], 
-	'battery':[], 
-	'report_interval':[],
-	'local_daily_rain_accumm':[],
-	'rain_accumm_final':[],
-	'local_daily_rain_accum_final':[],
-	'precipitation_analysis_type':[]
-	};
-var obs7Days = {	
-	'time_epoch':[], 
-	'wind_lull':[], 
-	'wind_avg':[], 
-	'wind_gust':[], 
-	'wind_direction':[], 
-	'wind_sample_interval':[], 
-	'station_pressure':[], 
-	'air_temperature':[], 
-	'relative_humidity':[], 
-	'illuminance':[], 
-	'uv':[], 
-	'solar_radiation':[], 
-	'rain_accumulated':[], 
-	'precipitation_type':[], 
-	'lightning_strike_avg_distance':[], 
-	'lightning_strike_count':[], 
-	'battery':[], 
-	'report_interval':[],
-	'local_daily_rain_accumm':[],
-	'rain_accumm_final':[],
-	'local_daily_rain_accum_final':[],
-	'precipitation_analysis_type':[]};
+var obsToday = { 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[] 	};
+var obs7Days = {	 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[]}; 
+var obsSummary = { 'TIMESTAMP' : [], 'PRESSURE' : [], 'PRESSURE_HIGH' : [], 'PRESSURE_LOW' : [], 'TEMP' : [], 'TEMP_HIGH' : [], 'TEMP_LOW' : [], 'HUMIDITY' : [], 'HUMIDITY_HIGH' : [], 'HUMIDITY_LOW' : [], 'LUX' : [], 'LUX_HIGH' : [], 'LUX_LOW' : [], 'UV' : [], 'UV_HIGH' : [], 'UV_LOW' : [], 'SOLAR_RADIATION' : [], 'SOLAR_RADIATION_HIGH' : [], 'SOLAR_RADIATION_LOW' : [], 'WIND_AVG' : [], 'WIND_GUST' : [], 'WIND_LULL' : [], 'WIND_DIR' : [], 'WIND_INTERVAL' : [], 'STRIKE_COUNT' : [], 'STRIKE_AVG_DISTANCE' : [], 'RECORD_COUNT' : [], 'BATTERY' : [], 'PRECIP_ACCUM_TODAY_LOCAL' : [], 'PRECIP_ACCUM_TODAY_LOCAL_FINAL' : [], 'PRECIP_MINS_TODAY_LOCAL' : [], 'PRECIP_MINS_TODAY_LOCAL_FINAL' : [], 'PRECIP_TYPE' : [], 'PRECIP_ANALYSIS_TYPE' : [] };
 
-	var obsSummary = {
-'TIMESTAMP' : [],
-'PRESSURE' : [],
-'PRESSURE_HIGH' : [],
-'PRESSURE_LOW' : [],
-'TEMP' : [],
-'TEMP_HIGH' : [],
-'TEMP_LOW' : [],
-'HUMIDITY' : [],
-'HUMIDITY_HIGH' : [],
-'HUMIDITY_LOW' : [],
-'LUX' : [],
-'LUX_HIGH' : [],
-'LUX_LOW' : [],
-'UV' : [],
-'UV_HIGH' : [],
-'UV_LOW' : [],
-'SOLAR_RADIATION' : [],
-'SOLAR_RADIATION_HIGH' : [],
-'SOLAR_RADIATION_LOW' : [],
-'WIND_AVG' : [],
-'WIND_GUST' : [],
-'WIND_LULL' : [],
-'WIND_DIR' : [],
-'WIND_INTERVAL' : [],
-'STRIKE_COUNT' : [],
-'STRIKE_AVG_DISTANCE' : [],
-'RECORD_COUNT' : [],
-'BATTERY' : [],
-'PRECIP_ACCUM_TODAY_LOCAL' : [],
-'PRECIP_ACCUM_TODAY_LOCAL_FINAL' : [],
-'PRECIP_MINS_TODAY_LOCAL' : [],
-'PRECIP_MINS_TODAY_LOCAL_FINAL' : [],
-'PRECIP_TYPE' : [],
-'PRECIP_ANALYSIS_TYPE' : []
-};
-
-	  var fifteenMinuteTemp = [];
-	  var fifteenMinuteEpoch = [];
-	  var fifteenMinuteObs = [];
-
+var fifteenMinuteTemp = [];
+var fifteenMinuteEpoch = [];
 
 // ********************
-// charts here
+// charts here using chart.js
 // ********************
 
 function drawSummaryCharts(){
-var ctx = document.getElementById('summaryTempChart').getContext('2d');
-var chart = new Chart(ctx, {
-    // The type of chart we want to create
+	var ctx = document.getElementById('summaryTempChart').getContext('2d');
+	var chart = new Chart(ctx, {
+    
+	// The type of chart we want to create
     type: 'line',
 
     // The data for our dataset
     data: 
 	{
         labels: obsSummary['TIMESTAMP'],
-		
-		datasets: [
-		
-		
-		{
-            label: 'Min',
+	
+		datasets: [{
+			label: 'Min',
             backgroundColor: cssvar('--temp-min-colour'),
 			fill: false,
 			pointRadius: 1,
             borderColor: cssvar('--temp-min-colour'),
-			
-           data: obsSummary['TEMP_LOW'],
+			data: obsSummary['TEMP_LOW'],
         },
 		{
             label: 'Ave',
@@ -128,8 +43,7 @@ var chart = new Chart(ctx, {
             backgroundColor: cssvar('--temp-min-colour'),
 			fill: "-1",
             borderColor: cssvar('--temp-colour'),
-			
-           data: obsSummary['TEMP'],
+			data: obsSummary['TEMP'],
         },
 		{
             label: 'Max',
@@ -137,86 +51,85 @@ var chart = new Chart(ctx, {
 			fill: "-1",
 			pointRadius: 1,
             borderColor: cssvar('--temp-max-colour'),
-			
-           data: obsSummary['TEMP_HIGH'],
+			data: obsSummary['TEMP_HIGH'],
         }]
     },
 
     // Configuration options go here
-    options: {tooltips: {
-      mode: 'index',
-      intersect: false,
-      displayColors: false,
-    },legend:{display:false},
-	scales: {
+    options: {
+		tooltips: {
+			mode: 'index',
+			intersect: false,
+			displayColors: false,
+		},
+		legend:{
+			display:false},
+		scales: {
             xAxes: [{
                 ticks: {
-                    display: false //this will remove only the label
-                },
+					display: false //this will remove only the label
+				},
 				gridLines: {
-                drawOnChartArea: false
-            }
+					drawOnChartArea: false
+				}
             }],
 			yAxes: [{
                 gridLines: {
-                drawOnChartArea: false
-            }
+					drawOnChartArea: false
+				}
             }]
         }
 	}
-});	
+	});	
 }
 
 function drawTodayCharts(){
-var ctx = document.getElementById('todayTempChart').getContext('2d');
-var chart = new Chart(ctx, {
+	var ctx = document.getElementById('todayTempChart').getContext('2d');
+	var chart = new Chart(ctx, {
     // The type of chart we want to create
     type: 'line',
 
     // The data for our dataset
     data: 
 	{
-        labels: fifteenMinuteEpoch,
-		//labels: fifteenMinuteObs['time'],
+        labels: fifteenMinuteEpoch,		
 		
-		datasets: [
-		
-		
-		{
+		datasets: [{
             label: 'Temp',
 			pointRadius: 1,
             backgroundColor: cssvar('--temp-colour'),
 			fill: false,
             borderColor: cssvar('--temp-colour'),
-			
-           data: fifteenMinuteTemp,
-		   //data: fifteenMinuteObs['temp'],
-        }]
+			data: fifteenMinuteTemp,
+		}]
     },
 
     // Configuration options go here
-    options: {tooltips: {
-      mode: 'index',
-      intersect: false,
-      displayColors: false,
-    },legend:{display:false},
-	scales: {
+    options: {
+		tooltips: {
+			mode: 'index',
+			intersect: false,
+			displayColors: false,
+		},
+		legend:{
+			display:false},
+		scales: {
             xAxes: [{
                 ticks: {
                     display: false //this will remove only the label
                 },
 				gridLines: {
-                drawOnChartArea: false
-            }
-            }],
+					drawOnChartArea: false
+				}
+				}],
 			yAxes: [{
                 gridLines: {
-                drawOnChartArea: false
-            }
+					drawOnChartArea: false
+				}
             }]
         }
 	}
-});	
+	});	
 }
 
 // *******************************
@@ -242,7 +155,7 @@ const getDailySummaryObs = async () => {
 function processSummaryObs(summaries){
 // gets an array of daily summaries
 summaries.forEach(parseSummary);
-drawSummaryCharts();
+//drawSummaryCharts();
 
 }
 
@@ -277,14 +190,65 @@ const getTodayObs = async () => {
 
 const getInitialDaily = async () => {
   await getTodayObs();
-  drawTodayCharts();
-  console.log("Daily Downloaded and chart drawn");
+  //drawTodayCharts();
+  
+  
+  //***************************
+  // chartist
+  
+  var dayData = {
+  // A labels array that can contain any sort of values
+  labels: fifteenMinuteEpoch,
+  // Our series array that contains series objects or in this case series data arrays
+  series: [fifteenMinuteTemp],className: 'colourme'
+  
+};
+var dayOptions = {
+  // Don't draw the line chart points
+  showPoint: false,
+  // Disable line smoothing
+  lineSmooth: true,
+  axisX: {
+    // We can disable the grid for this axis
+    showGrid: false,
+    // and also don't show the label
+    showLabel: false
+  },
+  
+};
+chartDayTemp = new Chartist.Line('#dailychartist', dayData,dayOptions);
+
+  
+  
+  
+   var windData = {
+  // A labels array that can contain any sort of values
+  //labels: fifteenMinuteEpoch,
+  // Our series array that contains series objects or in this case series data arrays
+  series: [wspeed]
+  
+};
+var windOptions = {
+  // Don't draw the line chart points
+  showPoint: false,
+  // Disable line smoothing
+  lineSmooth: true,
+  axisX: {
+    // We can disable the grid for this axis
+    showGrid: false,
+    // and also don't show the label
+    showLabel: false
+  },
+  
+};
+chartWind = new Chartist.Line('#windchartist', windData,windOptions); 
   
 }
 
 
 getInitialDaily()
 .then(getDailySummaryObs)
+
 .then(() => loadScript('wflowsocket.js'))
 .then(() => loadScript('suncalc.js'))
   .then(() => {
