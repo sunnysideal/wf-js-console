@@ -7,9 +7,8 @@ Details of that system can be found at https://weatherflow.com/tempest-weather-s
 WeatherFlow have provided both a REST and WebSocket API to access your own data, and this project simply makes use of these just like the WeatherFlow app or website does.
 
 Note: You must have a system and account with WeatherFlow for this to work.
-To use you will need your personal key and device ID.
+To use you will need your personal key..
 Personal key: You will need to sign in to the Tempest Web App at tempestwx.com, then go to Settings -> Data Authorizations -> Create Token, then use that token when prompted during initialisation.
-Device ID: Settings -> Stations -> <your station> -> Status, then find the Device ID (This is not the station ID)
 
 This information is then only stored in your browser storage.
 
