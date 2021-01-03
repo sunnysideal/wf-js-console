@@ -2,107 +2,23 @@
 Configuration scripts and initial variables
 Making use of browser local storage for 
 Personal Token
-Device ID
-Station Name
 
-(Anything else that it needs...)
+
+(Anything else that it needs to get added, for instance chosen units to display...)
 */
 
-// to be main launch point of console if all requirements are met
-function launchConsole(){
-	
-		document.getElementById("settings").style.display = "none";
-		document.getElementById("console").style.display = "grid";
-	
-		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
-		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
-		.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
-		.then(() => loadScript('wfparse.js?v=1'))
-		.then(() => loadScript('wflowrest.js?v=1'))
-
-		.catch(() => console.error('Something went wrong.'))
-
-}
-
+// starts here, checks that all settings are present in the stored config
 function settingsExist(){
-	missingSettings=loadConfig(); // flag for any missing settings
+	missingSettings=loadConfig(); // get config and return flag if there are any missing settings
 	
 	if(missingSettings==true){ // launch settings page if there are any missing settings
 		document.getElementById('settings').style.display = "block";
 		document.getElementById('console').style.display = "none";
 	}
-	else{
+	else{ // if the settings are there, proceed with starting up
 		getWFConfig();
 		
 	}
-
-	
-}
-
-
-function updateHTML(updateElement,value){
-	if(document.getElementById(updateElement)){
-		document.getElementById(updateElement).innerHTML = value;
-	}
-}// end updateHTML
-
-function updateFormValue(updateElement,value){
-	if(document.getElementById(updateElement)){
-          document.getElementById(updateElement).value=value;
-	
-	}
-}
-
-function getFormValue(formID){
-	if(document.getElementById(formID)){
-          return document.getElementById(formID).value;
-	}
-}
-
-function clearConfig(){
-	for (configKey in config){
-		localStorage.removeItem(configKey);
-		updateFormValue(configKey,"");
-	}
-}
-
-function saveConfig(){
-	for (configKey in storedConfig){
-		value = getFormValue(configKey);
-		localStorage.setItem(configKey, value);
-		
-	}
-}
-
-function loadConfig(){
-	missingSettings = false;
-	
-	// either read each defined key from storage or prompt user
-	for (configKey in storedConfig){
-		// TODO: wrap everything up in a single form when required fields have been listed
-
-		// if the value is already in local storage read from there
-		if (localStorage.getItem(configKey)) {
-			config[configKey]=localStorage.getItem(configKey);
-			updateFormValue(configKey,config[configKey]);
-		}
-		else { // if not in local need to launch settings
-			missingSettings=true; 
-		} // end if
-	}// end for
-	return missingSettings;
-}
-
-// load required scripts in correct order
-const loadScript = src => {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.onload = resolve
-    script.onerror = reject
-    script.src = src
-    document.head.append(script)
-  })
 }
 
 // send request to weatherflow rest interface for all observations from today at 1 minute intervals!
@@ -115,8 +31,10 @@ const getWFConfig = async () => {
 	
 	// add tempestID to config
 	wfConfigJson['stations'][0]['devices'].forEach(getTempestID);
+	config['lat']=wfConfigJson['stations'][0]['latitude'];
+	config['lon']=wfConfigJson['stations'][0]['longitude'];
 	
-	//launch console with config complete
+	// finally launch console with config complete
 	launchConsole();
 }// end getWFConfig
 
@@ -127,11 +45,107 @@ function getTempestID(device){
 	}
 }
 
-/*
-const getInitialDaily = async () => {
-  await getTodayObs();
-  //drawTodayCharts();
-*/
+
+// to be main launch point of console if all requirements are met
+function launchConsole(){
+		// hide settings html and show console grid
+		document.getElementById("settings").style.display = "none";
+		document.getElementById("console").style.display = "grid";
+	
+		//load scripts in order, waiting to make sure data has arrived
+		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
+		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
+		.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
+		.then(() => loadScript('wfparse.js'))
+		.then(() => loadScript('wflowrest.js'))
+
+		.catch(() => console.error('Something went wrong.'))
+
+}
+
+// config required
+var config = { 'wfPersonalToken':'','wfTempestID':'' };
+// stored in browser local storage
+var storedConfig = { 'wfPersonalToken':'' };
+
+
+// get config from file
+function loadConfig(){
+	missingSettings = false; // flag for confirming settings are present
+	
+	// either read each defined key from storage or prompt user
+	for (configKey in storedConfig){
+		// if the value is already in local storage read from there
+		if (localStorage.getItem(configKey)) {
+			config[configKey]=localStorage.getItem(configKey);
+			updateFormValue(configKey,config[configKey]);
+		}
+		else { // if not in local need to launch settings
+			missingSettings=true; 
+		} // end if
+	}// end for
+	return missingSettings;
+}
+
+/***********************************************
+* Utility scripts
+***********************************************/
+
+// update element HTML
+function updateHTML(updateElement,value){
+	if(document.getElementById(updateElement)){
+		document.getElementById(updateElement).innerHTML = value;
+	}
+}// end updateHTML
+
+// insert known value into form field
+function updateFormValue(updateElement,value){
+	if(document.getElementById(updateElement)){
+          document.getElementById(updateElement).value=value;
+	
+	}
+}// end updateFormValue
+
+// get a value from a form text box
+function getFormValue(formID){
+	if(document.getElementById(formID)){
+          return document.getElementById(formID).value;
+	}
+}
+
+// clear all browser stored config
+function clearConfig(){
+	for (configKey in config){
+		localStorage.removeItem(configKey);
+		updateFormValue(configKey,"");
+	}
+}
+
+// save config key to browser local storage
+function saveConfig(){
+	for (configKey in storedConfig){
+		value = getFormValue(configKey);
+		localStorage.setItem(configKey, value);
+		
+	}
+}
+
+
+
+// function to load scripts in correct order
+const loadScript = src => {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.onload = resolve
+    script.onerror = reject
+    script.src = src
+    document.head.append(script)
+  })
+}
+
+
+
 
 /*
 ******************************************************************
@@ -142,7 +156,7 @@ on Startup:
 	Check that it is available (If not, exit)
 	If values exist, read from there
 	If values don't exist, prompt for the values
-	
+*******************************************************************	
 */
 
 // function to check availability of local storage for config
@@ -171,39 +185,6 @@ function storageAvailable(type) {
     }
 }
 
-/*
-******************************************************************
-Initialise site data structures and utility functions
-
-*/
-
-// JSON to hold required station config
-
-var config = { 'wfPersonalToken':'','wfTempestID':'' };
-var storedConfig = { 'wfPersonalToken':'' };
-
-// confirm locaStorage is available
-if (storageAvailable('localStorage')) {
-	
-	// check for url parameter to clear current config 
-	// to do this add ?clear=true to the end of the url
-	// e.g. http://www.myweather.com/index.html?clear=true
-	
-	queryString = window.location.search;
-	urlParams = new URLSearchParams(queryString);
-	if (urlParams.get('clear')=='true'){	
-		// clear previous config values
-		for (configKey in config){
-			localStorage.removeItem(configKey);
-		}//end for
-	}//end if
-	
-	settingsExist();  //get config then launch
-
-	
-} else { // local storage not supported
-    alert("Sorry, your browser does not allow local storage...");	
-}// end if
 
 
 // site wide variables
@@ -510,4 +491,34 @@ const months = [
 function browserResize(){
 	initWind();
 }
+
+
+/**************************************************************
+Launch of scripts starts here
+***************************************************************/
+
+// confirm localStorage is available to store config
+if (storageAvailable('localStorage')) {
+	
+	// check for url parameter to clear current config 
+	// to do this add ?clear=true to the end of the url
+	// e.g. https://www.wxconsole.in.net/?clear=true
+	
+	queryString = window.location.search;
+	urlParams = new URLSearchParams(queryString);
+	if (urlParams.get('clear')=='true'){	
+		// clear previous config values
+		for (configKey in config){
+			localStorage.removeItem(configKey);
+		}//end for
+	}//end if
+	
+	// now launch initialisation
+	settingsExist();  //get config then launch
+
+	
+} else { // local storage not supported
+    alert("Sorry, your browser does not allow local storage...");	
+}// end if
+
 

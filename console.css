@@ -130,6 +130,7 @@ font-size:60%;
 .battery { font-size: 75%;grid-area: 4/1/5/3;text-align:center; }
 .power_mode {font-size: 75%;grid-area:4/3/5/5; text-align:center;}
 
+
 .datebattery-container {
 	display:grid;
 	position:relative;
@@ -147,6 +148,7 @@ font-size:60%;
 .sunrise_time {font-size:75%;grid-area: 2/1/2/2;text-align:center;}
 .solarnoon_time {font-size:75%;grid-area:2/2/2/3;text-align:center;}
 .sunset_time {font-size:75%;grid-area: 2/3/2/4;text-align:center;}
+
 
 .ephemeris-container {
 	display:grid;

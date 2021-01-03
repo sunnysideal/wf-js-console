@@ -254,13 +254,16 @@ getInitialDaily()
 .then(() => loadScript('suncalc.js'))
   .then(() => {
     // loading scripts in order
-	var times = SunCalc.getTimes(new Date(), 55.978, -3.723);
+	var times = SunCalc.getTimes(new Date(), config['lat'], config['lon']);
 	var sunriseStr = times.sunrise.getHours() + ':' + times.sunrise.getMinutes();
 	var sunsetStr = times.sunset.getHours() + ':' + times.sunset.getMinutes();
 	var solarNoonStr = times.solarNoon.getHours() + ':' + times.solarNoon.getMinutes();
 	updateHTML('sunrise_time', sunriseStr);
 	updateHTML('sunset_time', sunsetStr);
 	updateHTML('solarnoon_time', solarNoonStr);
+
+
+	
   })
 
 
