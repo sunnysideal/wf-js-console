@@ -17,8 +17,8 @@ function launchConsole(){
 		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
 		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
 		.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
-		.then(() => loadScript('wfparse.js'))
-		.then(() => loadScript('wflowrest.js'))
+		.then(() => loadScript('wfparse.js?v=1'))
+		.then(() => loadScript('wflowrest.js?v=1'))
 
 		.catch(() => console.error('Something went wrong.'))
 
@@ -32,9 +32,11 @@ function settingsExist(){
 		document.getElementById('console').style.display = "none";
 	}
 	else{
-		launchConsole();
+		getWFConfig();
+		
 	}
 
+	
 }
 
 
@@ -65,7 +67,7 @@ function clearConfig(){
 }
 
 function saveConfig(){
-	for (configKey in config){
+	for (configKey in storedConfig){
 		value = getFormValue(configKey);
 		localStorage.setItem(configKey, value);
 		
@@ -74,15 +76,15 @@ function saveConfig(){
 
 function loadConfig(){
 	missingSettings = false;
-		// either read each defined key from storage or prompt user
-	for (configKey in config){
+	
+	// either read each defined key from storage or prompt user
+	for (configKey in storedConfig){
 		// TODO: wrap everything up in a single form when required fields have been listed
 
 		// if the value is already in local storage read from there
 		if (localStorage.getItem(configKey)) {
 			config[configKey]=localStorage.getItem(configKey);
 			updateFormValue(configKey,config[configKey]);
-			
 		}
 		else { // if not in local need to launch settings
 			missingSettings=true; 
@@ -102,6 +104,34 @@ const loadScript = src => {
     document.head.append(script)
   })
 }
+
+// send request to weatherflow rest interface for all observations from today at 1 minute intervals!
+const getWFConfig = async () => {
+	// request all values from today in 1 minute buckets
+	fetchString="https://swd.weatherflow.com/swd/rest/stations?token="+config['wfPersonalToken'];
+	//fetchString="https://swd.weatherflow.com/swd/rest/stations?token=4ab487cb-3d50-48ba-a0c1-6b03f05c6156";
+	const response = await fetch(fetchString);
+	const wfConfigJson = await response.json(); //extract JSON from the http response
+	
+	// add tempestID to config
+	wfConfigJson['stations'][0]['devices'].forEach(getTempestID);
+	
+	//launch console with config complete
+	launchConsole();
+}// end getWFConfig
+
+// get Tempest Device ID from config string
+function getTempestID(device){
+	if(device['device_type']== "ST"){
+		config['wfTempestID'] = device['device_id'];
+	}
+}
+
+/*
+const getInitialDaily = async () => {
+  await getTodayObs();
+  //drawTodayCharts();
+*/
 
 /*
 ******************************************************************
@@ -150,6 +180,7 @@ Initialise site data structures and utility functions
 // JSON to hold required station config
 
 var config = { 'wfPersonalToken':'','wfTempestID':'' };
+var storedConfig = { 'wfPersonalToken':'' };
 
 // confirm locaStorage is available
 if (storageAvailable('localStorage')) {
@@ -350,7 +381,6 @@ height=parentHeight(document.getElementById('wind'));
         canvas.style.height = size + "px"; 
 		canvas.width = size*scale; 
         canvas.height = size*scale; 
-		console.log(width + " " +height+" "+scale);
 		        
 		wind.scale(scale, scale);
   
@@ -366,12 +396,6 @@ function drawWind(needle) {
 
 	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
 	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);		
-
-
-	 
-
-	
-	console.log("width:height "+width+" "+height);
 	
 	wind.clearRect(0, 0, width, height); // clear canvas
 	

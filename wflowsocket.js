@@ -6,7 +6,6 @@
 
 // create socket
 let socket = new WebSocket("wss://ws.weatherflow.com/swd/data?token=" + config['wfPersonalToken'] );
-console.log("New socket created");
 
 // launch when socket opened
 socket.onopen = function(e) {
