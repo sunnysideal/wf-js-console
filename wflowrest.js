@@ -139,7 +139,7 @@ function drawTodayCharts(){
 
 // function to send request to weatherflow rest interface for all summary observations for 1 month
 const getDailySummaryObs = async () => {
-	console.log("Starting summary obs");
+
 	var minDate = new Date(); 
     minDate.setMonth(minDate.getMonth() - 1);
 	var maxDate = new Date();
@@ -177,6 +177,7 @@ function parseSummary(daySummary){
 // send request to weatherflow rest interface for all observations from today at 1 minute intervals!
 const getTodayObs = async () => {
 	// request all values from today in 1 minute buckets
+	
 	fetchString="https://swd.weatherflow.com/swd/rest/observations/device/"+config['wfTempestID']+"?day_offset=0&token="+config['wfPersonalToken']
 	const response = await fetch(fetchString);
 	const dailyJson = await response.json(); //extract JSON from the http response
@@ -249,7 +250,7 @@ chartWind = new Chartist.Line('#windchartist', windData,windOptions);
 getInitialDaily()
 .then(getDailySummaryObs)
 
-.then(() => loadScript('wflowsocket.js'))
+.then(() => loadScript('wflowsocket.js?v=1'))
 .then(() => loadScript('suncalc.js'))
   .then(() => {
     // loading scripts in order
