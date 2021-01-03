@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="console.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+<link rel="stylesheet" href="console.css"> <!-- load console.css after chartist -->
 <title>Test Weather</title>
 </head>
 <body onresize="browserResize()">
@@ -58,6 +58,7 @@
 		<div class="power_mode_title obs_title">Power Mode</div>
 		<div class="battery"><span id="battery">-.---</span> V</div>
 		<div class="power_mode"><span id="power_mode"></span></div>
+
 	</div>
 
 
@@ -68,6 +69,7 @@
 		<div class = "solarnoon_time"><span id="solarnoon_time">time</span></div>
 		<div class = "sunrise_time"><span id="sunrise_time">time</span></div>
 		<div class="sunset_time"><span id="sunset_time">time</span></div>
+
 	</div>
 
 </div>
