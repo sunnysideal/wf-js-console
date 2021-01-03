@@ -8,6 +8,101 @@ Station Name
 (Anything else that it needs...)
 */
 
+// to be main launch point of console if all requirements are met
+function launchConsole(){
+	
+		document.getElementById("settings").style.display = "none";
+		document.getElementById("console").style.display = "grid";
+	
+		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
+		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
+		.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
+		.then(() => loadScript('wfparse.js'))
+		.then(() => loadScript('wflowrest.js'))
+
+		.catch(() => console.error('Something went wrong.'))
+
+}
+
+function settingsExist(){
+	missingSettings=loadConfig(); // flag for any missing settings
+	
+	if(missingSettings==true){ // launch settings page if there are any missing settings
+		document.getElementById('settings').style.display = "block";
+		document.getElementById('console').style.display = "none";
+	}
+	else{
+		launchConsole();
+	}
+
+}
+
+
+function updateHTML(updateElement,value){
+	if(document.getElementById(updateElement)){
+		document.getElementById(updateElement).innerHTML = value;
+	}
+}// end updateHTML
+
+function updateFormValue(updateElement,value){
+	if(document.getElementById(updateElement)){
+          document.getElementById(updateElement).value=value;
+	
+	}
+}
+
+function getFormValue(formID){
+	if(document.getElementById(formID)){
+          return document.getElementById(formID).value;
+	}
+}
+
+function clearConfig(){
+	for (configKey in config){
+		localStorage.removeItem(configKey);
+		updateFormValue(configKey,"");
+	}
+}
+
+function saveConfig(){
+	for (configKey in config){
+		value = getFormValue(configKey);
+		localStorage.setItem(configKey, value);
+		
+	}
+}
+
+function loadConfig(){
+	missingSettings = false;
+		// either read each defined key from storage or prompt user
+	for (configKey in config){
+		// TODO: wrap everything up in a single form when required fields have been listed
+
+		// if the value is already in local storage read from there
+		if (localStorage.getItem(configKey)) {
+			config[configKey]=localStorage.getItem(configKey);
+			updateFormValue(configKey,config[configKey]);
+			
+		}
+		else { // if not in local need to launch settings
+			missingSettings=true; 
+		} // end if
+	}// end for
+	return missingSettings;
+}
+
+// load required scripts in correct order
+const loadScript = src => {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.onload = resolve
+    script.onerror = reject
+    script.src = src
+    document.head.append(script)
+  })
+}
+
 /*
 ******************************************************************
 Initialisation of storage
@@ -61,7 +156,7 @@ if (storageAvailable('localStorage')) {
 	
 	// check for url parameter to clear current config 
 	// to do this add ?clear=true to the end of the url
-	// e.g. http://www.myweather.con/index.html?clear=true
+	// e.g. http://www.myweather.com/index.html?clear=true
 	
 	queryString = window.location.search;
 	urlParams = new URLSearchParams(queryString);
@@ -72,31 +167,11 @@ if (storageAvailable('localStorage')) {
 		}//end for
 	}//end if
 	
-	// either read each defined key from storage or prompt user
-	for (configKey in config){
-		// TODO: wrap everything up in a single form when required fields have been listed
+	settingsExist();  //get config then launch
 
-		// if the value is already in local storage read from there
-		if (localStorage.getItem(configKey)) {
-			config[configKey]=localStorage.getItem(configKey);
-		}
-		else { // if not in local storage prompt and receive from user, then save to storage
-			// ****************
-			// TODO: Add a check that the connection works
-			// ****************
-			tempKeyValue = prompt("Please enter the value for " + configKey );
-			localStorage.setItem(configKey, tempKeyValue);
-		} // end if
-	}// end for
-	
-	// set OK for storage flag
-	checkStorage = true;
-	
 	
 } else { // local storage not supported
-    alert("Sorry, your browser does not allow local storage...");
-	checkStorage = false;
-	
+    alert("Sorry, your browser does not allow local storage...");	
 }// end if
 
 
@@ -120,11 +195,7 @@ function updateObsArray(observation,index){
 	updateHTML(tempestObsFields[index],observation);
 }
 
-function updateHTML(updateElement,value){
-	if(document.getElementById(updateElement)){
-		document.getElementById(updateElement).innerHTML = value;
-	}
-}// end updateHTML
+
 
 function cardinal(deg){
 	 if (deg>11.25 && deg<=33.75){
