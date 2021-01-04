@@ -50,34 +50,34 @@ body, html {
 	
 }
 
-.obs_title{
+.obs-title{
 	color: var(--titles-colour); font-size:90%; text-align:center;
 }
 
-.air_temperature_min, .air_temperature_min_time{
+.air-temperature-min, .air-temperature-min-time{
  color: var(--temp-min-colour);
 }
 
-.air_temperature_max, .air_temperature_max_time{
+.air-temperature-max, .air-temperature-max-time{
  color: var(--temp-max-colour);
 }
 
-.air_temperature_max_time, .air_temperature_min_time {
+.air-temperature-max-time, .air-temperature-min-time {
 font-size:60%;
 }
 
-.air_temperature_min, .air_temperature_max{
+.air-temperature-min, .air-temperature-max{
  font-size:70%;
 }
 
 
 
-.air_temperature_title { grid-area: 1 / 1 / 2 / 13;text-align:center;}
-.air_temperature { font-size: 300%;grid-area: 2 / 1 /3 / 13; text-align:center;}
-.air_temperature_min { grid-area: 3/4 /4/ 7;   text-align:center;align-self:end;}
-.air_temperature_max { grid-area: 3/7/4 / 10;  text-align:center;align-self:end;}
-.air_temperature_min_time { grid-area: 4/4/5 / 7; text-align:center;}
-.air_temperature_max_time { grid-area: 4/7/5/ 10; text-align:center;}
+.air-temperature-title { grid-area: 1 / 1 / 2 / 13;text-align:center;}
+.air-temperature { font-size: 300%;grid-area: 2 / 1 /3 / 13; text-align:center;}
+.air-temperature-min { grid-area: 3/4 /4/ 7;   text-align:center;align-self:end;}
+.air-temperature-max { grid-area: 3/7/4 / 10;  text-align:center;align-self:end;}
+.air-temperature-min-time { grid-area: 4/4/5 / 7; text-align:center;}
+.air-temperature-max-time { grid-area: 4/7/5/ 10; text-align:center;}
 
 
 .temperature-container {
@@ -92,7 +92,7 @@ font-size:60%;
 
 
 
-.chart_title  { grid-area: 1 ;text-align:center;}
+.chart-title  { grid-area: 1 ;text-align:center;}
 .chart { grid-area: 2 ; width:100%;height:100%;justify-self:center;position:relative; text-align:center; }
 
 .wind-records{grid-area:3;text-align:center;align-self:center;}
@@ -127,10 +127,10 @@ font-size:60%;
 .date {font-size:60%;grid-area: 1/1/2/5;text-align:center;align-self:end;}
 .time {font-size:60%;grid-area: 2/1/3/5;text-align:center;align-self:start; }
 
-.battery_title {font-size: 60%;grid-area: 3/1/4/3;text-align:center;align-self:end;}
-.power_mode_title {font-size: 60%;grid-area: 3/3/4/5;text-align:center; align-self:end;}
-.battery { font-size: 75%;grid-area: 4/1/5/3;text-align:center; }
-.power_mode {font-size: 75%;grid-area:4/3/5/5; text-align:center;}
+.battery-title {font-size: 60%;grid-area: 3/1/4/3;text-align:center;align-self:end;}
+.power-mode-title {font-size: 60%;grid-area: 3/3/4/5;text-align:center; align-self:end;}
+.battery-value { font-size: 75%;grid-area: 4/1/5/3;text-align:center; }
+.power-mode {font-size: 75%;grid-area:4/3/5/5; text-align:center;}
 
 
 .datebattery-container {
@@ -143,13 +143,13 @@ font-size:60%;
 }
 
 
-.sunrise_image {font-size:60%;grid-area: 1/1/2/2;text-align:center; }
-.solarnoon_image {font-size:60%;grid-area: 1/2/2/3; text-align:center;}
-.sunset_image {font-size:60%;grid-area: 1/3/2/4;text-align:center; }
+.sunrise-image {font-size:60%;grid-area: 1/1/2/2;text-align:center; }
+.solarnoon-image {font-size:60%;grid-area: 1/2/2/3; text-align:center;}
+.sunset-image {font-size:60%;grid-area: 1/3/2/4;text-align:center; }
 
-.sunrise_time {font-size:75%;grid-area: 2/1/2/2;text-align:center;}
-.solarnoon_time {font-size:75%;grid-area:2/2/2/3;text-align:center;}
-.sunset_time {font-size:75%;grid-area: 2/3/2/4;text-align:center;}
+.sunrise-time {font-size:75%;grid-area: 2/1/2/2;text-align:center;}
+.solarnoon-time {font-size:75%;grid-area:2/2/2/3;text-align:center;}
+.sunset-time {font-size:75%;grid-area: 2/3/2/4;text-align:center;}
 
 
 .ephemeris-container {
