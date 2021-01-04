@@ -21,9 +21,9 @@ function settingsExist(loadSettings){  //loadSettings = true if settings request
 	}
 }
 
-// send request to weatherflow rest interface for all observations from today at 1 minute intervals!
+// send request to get station config using personal token
 const getWFConfig = async () => {
-	// request all values from today in 1 minute buckets
+	// request all station config
 	fetchString="https://swd.weatherflow.com/swd/rest/stations?token="+config['wfPersonalToken'];
 	//fetchString="https://swd.weatherflow.com/swd/rest/stations?token=4ab487cb-3d50-48ba-a0c1-6b03f05c6156";
 	const response = await fetch(fetchString);
@@ -31,12 +31,30 @@ const getWFConfig = async () => {
 	
 	// add tempestID to config
 	wfConfigJson['stations'][0]['devices'].forEach(getTempestID);
+	
 	config['lat']=wfConfigJson['stations'][0]['latitude'];
 	config['lon']=wfConfigJson['stations'][0]['longitude'];
+	// get station_id
+	for (const [key, value] of Object.entries(wfConfigJson['stations'][0])) {
+		if(key=='station_id'){
+		config['station_id']=value;
+	}}
+
+
+	// use station_id to get units in use on station
+	fetchString="https://swd.weatherflow.com/swd/rest/observations/station/"+config['station_id']+"?token="+config['wfPersonalToken'];
+	const stationResponse = await fetch(fetchString);
+	const wfStationObs = await stationResponse.json();
+	
+	units=wfStationObs['station_units'];
+	console.log(units);
+	updateUnitLabels();
+	
 	
 	// finally launch console with config complete
 	launchConsole();
 }// end getWFConfig
+
 
 // get Tempest Device ID from config string
 function getTempestID(device){
@@ -51,6 +69,7 @@ function launchConsole(){
 		// hide settings html and show console grid
 		document.getElementById("settings").style.display = "none";
 		document.getElementById("console").style.display = "grid";
+		
 	
 		//load scripts in order, waiting to make sure data has arrived
 		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
@@ -93,8 +112,11 @@ function loadConfig(){
 
 // update element HTML
 function updateHTML(updateElement,value){
-	if(document.getElementById(updateElement)){
-		document.getElementById(updateElement).innerHTML = value;
+	if(document.getElementsByClassName(updateElement)){
+		var getClass = document.getElementsByClassName(updateElement);
+		for(i=0;i<getClass.length;i++){
+			getClass[i].innerHTML = value;
+		}
 	}
 }// end updateHTML
 
@@ -198,16 +220,93 @@ var obsSummaryFields=[ 'TIMESTAMP', 'PRESSURE', 'PRESSURE_HIGH','PRESSURE_LOW','
 var wspeed = [];
 // custom derived fields map
 var derivedFields=['power_mode','obs_time'];
+var unitLabels={};
+
 
 // utility function to fetch the variables from the CSS
 function cssvar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name);
 }
 // update elements from tempest obs
-function updateObsArray(observation,index){
-	updateHTML(tempestObsFields[index],observation);
+function updateValues(observation,index){
+
+	updateHTML(tempestObsFields[index],unitConvert(observation,tempestObsFields[index]));
 }
 
+function updateUnitLabels(){
+
+	for (unit in units){
+			
+		switch(unit){
+			case 'units_temp':
+				switch (units[unit]){
+					case 'c': label="&degC";
+					break;
+					case 'f': label="&degF";
+					break;
+				}
+			break;	
+			
+			case 'units_wind':
+				switch (units[unit]){
+					case 'mps': label="m/s";
+					break;
+					case 'kph': label="km/h";
+					break;
+					default: label = units[unit];
+				}
+			break;	
+			default:label="";
+			
+		}
+		unitLabels[unit]=label;
+		updateHTML(unit,label);
+
+	}
+			console.log(unitLabels);
+}
+
+function unitConvert(observation,type){
+	switch(type){
+		case 'air_temperature':
+			switch(units['units_temp']){
+				case 'c' :
+					return observation;
+					break;
+				case 'f' :
+					return (observation*9/5)+32;
+					break;
+			}
+			break;
+			
+		case 'wind_lull':
+		case 'wind_avg'	:
+		case 'wind_gust':
+		case 'wind_speed':
+			switch(units['units_wind']){
+				case 'mps' :
+					return observation;
+					break;
+				case 'kph' :
+					return observation*3.5999916767997199862;
+					break;
+				case 'mph' :
+					return observation*2.2369311202577;
+					break;
+				case 'kts' :
+					return observation*1.94384;
+					break;
+				case 'bft' :
+					return beaufort(observation);
+					break;
+			}
+		break;
+		default:
+			return observation;
+	}
+		
+	
+}
 
 
 function cardinal(deg){
@@ -372,7 +471,7 @@ function drawWind(needle) {
 	// print wind direction, speed and Beaufort description in centre of dial
 	wind.textAlign = "center";
 	wind.fillText(needle.targetCardinal,width/2,-1.3*windFontSize+height/2);
-	wind.fillText(Math.round(needle.windSpeed*10)/10+" m/s",width/2,height/2);
+	wind.fillText(Math.round(unitConvert(needle.windSpeed,'wind_speed')*10)/10,width/2,height/2);
 	wind.fillText(needle.bfDesc,width/2,1.3*windFontSize+height/2);
 	
 	// draw dial

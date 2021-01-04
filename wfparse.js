@@ -81,7 +81,8 @@ function updateOnObservations(tempestObs){
 	 			mode  = 3;
 				break;
 	}// end switch for power mode
-		
+	
+	
 
 	// if it's a 15 minute interval, time for a daily chart update!
 	if((60* Math.round(tempestObs[0]/60)) % 900 == 0){
@@ -89,16 +90,20 @@ function updateOnObservations(tempestObs){
 		chartDayTemp.update();
 	}
 	// update all html IDs
+	
 	updateHTML('power_mode',mode);
 	needle.bfDesc=beaufortWindForceScale[beaufort(tempestObs[2])]['Description']
 	updateHTML('beaufort_description',needle.bfDesc);
-	updateHTML('air_temperature_max',maximumTemp.toFixed(1));
+	
+
+	updateHTML('air_temperature_max',unitConvert(maximumTemp,'air_temperature').toFixed(1));
 	updateHTML('air_temperature_max_time',getHumanTimeHHMM(maximumTempEpoch));
-	updateHTML('air_temperature_min',minimumTemp.toFixed(1));
+	updateHTML('air_temperature_min',unitConvert(minimumTemp,'air_temperature').toFixed(1));
 	updateHTML('air_temperature_min_time',getHumanTimeHHMM(minimumTempEpoch));
 	
 	updateDateTime(tempestObs[0]);
-	tempestObs.forEach(updateObsArray);
+	
+	tempestObs.forEach(updateValues);
 }
 
 
