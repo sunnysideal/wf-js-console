@@ -471,7 +471,7 @@ function drawWind(needle) {
 	// print wind direction, speed and Beaufort description in centre of dial
 	wind.textAlign = "center";
 	wind.fillText(needle.targetCardinal,width/2,-1.3*windFontSize+height/2);
-	wind.fillText(Math.round(unitConvert(needle.windSpeed,'wind_speed')*10)/10,width/2,height/2);
+	wind.fillText(Math.round(unitConvert(needle.windSpeed,'wind_speed')*10)/10+" "+unitLabels['units_wind'],width/2,height/2);
 	wind.fillText(needle.bfDesc,width/2,1.3*windFontSize+height/2);
 	
 	// draw dial
