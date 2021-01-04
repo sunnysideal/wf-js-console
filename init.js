@@ -8,10 +8,10 @@ Personal Token
 */
 
 // starts here, checks that all settings are present in the stored config
-function settingsExist(){
+function settingsExist(loadSettings){  //loadSettings = true if settings requested
 	missingSettings=loadConfig(); // get config and return flag if there are any missing settings
 	
-	if(missingSettings==true){ // launch settings page if there are any missing settings
+	if(missingSettings==true||loadSettings==true){ // launch settings page if there are any missing settings
 		document.getElementById('settings').style.display = "block";
 		document.getElementById('console').style.display = "none";
 	}
@@ -128,6 +128,7 @@ function saveConfig(){
 		localStorage.setItem(configKey, value);
 		
 	}
+	settingsExist();
 }
 
 
@@ -304,95 +305,72 @@ function getHumanTimeHHMM(epoch){
 // properties for the wind needle
 var needle = { base:15, height:33, degrees: 1, targetDegrees: 0, targetCardinal: "N",windSpeed:0,moving:0, direction:1, speed:3,bfDesc:"" }
 
+// initialise canvas to size of parent 
 function initWind(){
-		//get DPI
-	let dpi = window.devicePixelRatio;
 	
 	//get canvas
 	let canvas = document.getElementById('wind');
+	
 	//get context
 	let wind = canvas.getContext('2d');
-
-/*
-	function fix_dpi() {
-		//get CSS height
-		//the + prefix casts it to an integer
-		//the slice method gets rid of "px"
-		//computedStyles = getComputedStyle(canvas);
-		/*
-for (var i=0; i<computedStyles.length; i++)
-{        
-    console.log( computedStyles[i] + " " + computedStyles.getPropertyValue(computedStyles[i]));
-    
-}
-		let style_height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
-		//get CSS width
-		let style_width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-		//scale the canvas
-		canvas.setAttribute('height', style_height * dpi);
-		canvas.setAttribute('width', style_width * dpi);
-	}// end fix-dpi
-*/
-//	fix_dpi();
-/*  
-	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2)*dpi;
-	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2)*dpi;
-*/	
-//https://www.geeksforgeeks.org/how-to-sharpen-blurry-text-in-html5-canvas/
-
-	//width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-	//height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
-	//console.log(width+" "+height);
+	
 	function parentWidth(elem) {
-    return elem.parentElement.clientWidth;
-}
-	function parentHeight(elem) {
-    return elem.parentElement.clientHeight;
-}
+		return elem.parentElement.clientWidth;
+	}
 
-width=parentWidth(document.getElementById('wind'));
-height=parentHeight(document.getElementById('wind'));
+	function parentHeight(elem) {
+		return elem.parentElement.clientHeight;
+	}
+	// gets width and height of parent
+	width=parentWidth(document.getElementById('wind'));
+	height=parentHeight(document.getElementById('wind'));
+	
+	// creating a square, so find smallest dimension and set both to that 
 	if(width>height)
 		size=height;
 	else
 		size=width;
-	       
-		   var scale = window.devicePixelRatio;
-        canvas.style.width = size + "px"; 
-        canvas.style.height = size + "px"; 
-		canvas.width = size*scale; 
-        canvas.height = size*scale; 
-		        
-		wind.scale(scale, scale);
+	 
+	// scale canvas to match screen for sharpness 
+	var scale = window.devicePixelRatio;
+    canvas.style.width = size + "px"; 
+    canvas.style.height = size + "px"; 
+	canvas.width = size*scale; 
+    canvas.height = size*scale; 
+	wind.scale(scale, scale);
   
-  drawWind(needle);
+	// now that canvas is initialised draw the wind compass
+	drawWind(needle);
 	
 	
 }
 
+// draws the wind compass based on the values in needle
 function drawWind(needle) {
 	let canvas = document.getElementById('wind');
 	//get context
 	let wind = canvas.getContext('2d');
-
+	// get properties of canvas
 	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
 	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);		
 	
+	// clear canvas
 	wind.clearRect(0, 0, width, height); // clear canvas
 	
+	// adjust dimensions based on canvas dimensions
 	wind.lineWidth = height*0.04;
 	gaugeRadius = (-wind.lineWidth-height*0.1) +height/2;
 	windFontSize = height/10;
 	wind.font = windFontSize + "px Arial";
-	
 	needle.base=height*0.04;
-	needle.height = needle.base*3.5;
-
+	needle.height = needle.base*3.2;
+	
+	// set colours from CSS
   	wind.fillStyle = cssvar('--page-text-colour');
 	wind.strokeStyle = cssvar('--wind-gauge-colour');
-  	wind.textAlign = "center";
-	
-	// print wind direction and speed in centre of dial
+  	
+	// print wind direction, speed and Beaufort description in centre of dial
+	wind.textAlign = "center";
 	wind.fillText(needle.targetCardinal,width/2,-1.3*windFontSize+height/2);
 	wind.fillText(Math.round(needle.windSpeed*10)/10+" m/s",width/2,height/2);
 	wind.fillText(needle.bfDesc,width/2,1.3*windFontSize+height/2);
@@ -407,34 +385,37 @@ function drawWind(needle) {
   
 	// draw needle
 	wind.beginPath();
-	wind.rotate(needle.degrees*Math.PI/180); //rotate to draw at current deg
+	wind.rotate(needle.degrees*Math.PI/180); //rotate to draw at current deg value
 	wind.translate(0,-gaugeRadius-wind.lineWidth/2); // move to radius
-	wind.lineTo(needle.base,0);
-	wind.lineTo(0,needle.height);
-	wind.lineTo(-needle.base,0);
-    wind.fill();
+	wind.lineTo(needle.base,0); 	// draw half of base line
+	wind.lineTo(0,needle.height); 	// draw to point
+	wind.lineTo(-needle.base,0);	// draw back to other end of base line
+    wind.fill();					// close fill triangle
 	
-	wind.translate(0,gaugeRadius+wind.lineWidth/2);
-	wind.rotate(-needle.degrees*Math.PI/180);//rotate back to beginning
-	wind.translate(-width/2,-height/2);
+	wind.translate(0,gaugeRadius+wind.lineWidth/2); // move back to centre of canvas
+	wind.rotate(-needle.degrees*Math.PI/180);		//rotate back to beginning
+	wind.translate(-width/2,-height/2);				// move back to (0,0) ready for next animation
 	
 }
 
+// updates values in needle then draws and will animate until target angle is met
 function rotateWindNeedle(){
 	// get direction to move compass in 
-	change = needle.targetDegrees-needle.degrees;
+	change = needle.targetDegrees-needle.degrees;	// difference between current angle and target
 	if(change !=0){  // if there is a difference between current direction and new direction
 		if( (( change + 360) % 360 > 180) && needle.moving==0){ //(clockwise, anti-clockwise whichever is closest)
 			needle.direction = -1; // anti-clockwise
 		}
 		needle.moving=1; // to show that we've started animation
-		needle.degrees = needle.degrees+needle.direction; // add/remove degree per animation loop
+		needle.degrees = needle.degrees + needle.direction; // add/remove degree per animation loop
+		
 		// deal with 0/360 degree
 		if (needle.degrees > 359)
 			needle.degrees=0;
 		if (needle.degrees < 0)
 			needle.degrees=359;
-		// draw the canvas
+		
+		// draw the canvas then request next frame in animation
 		drawWind(needle);
 		requestAnimationFrame(rotateWindNeedle);
 	}
@@ -444,6 +425,7 @@ function rotateWindNeedle(){
 	}
 }
 
+// updates date and time fields in HTML with human readable values
 function updateDateTime(epoch){
 		var d = new Date(epoch*1000);
 		
@@ -453,6 +435,7 @@ function updateDateTime(epoch){
 		updateHTML("obs_time",time);
 } // end updateDateTime
 
+// pad leading zeros in numbers
 function pad(n, len) {
    
     s = n.toString();
@@ -488,37 +471,36 @@ const months = [
   'Dec'
 ];
 
+// when browser resizes, run anything in here
 function browserResize(){
-	initWind();
+	initWind(); //need to get new size of canvas and redraw the wind compass
 }
 
-
+// for saving settings in browser local storage, and if all good continue to launch console
+function checkLocalStorage(){
+	// confirm localStorage is available to store config
+	if (storageAvailable('localStorage')) {
+		// check for url parameter to launch settings 
+		// e.g. https://www.wxconsole.in.net?settings
+	
+		queryString = window.location.search;
+		urlParams = new URLSearchParams(queryString);
+		if (urlParams.has('settings')){	
+			settingsExist(true);
+		}//end if
+		else{
+			// now launch initialisation
+			settingsExist();  //get config then launch
+		}
+	
+	} else { // local storage not supported
+		alert("Sorry, your browser does not allow local storage...");	
+	}// end if
+}
 /**************************************************************
 Launch of scripts starts here
 ***************************************************************/
+checkLocalStorage();
 
-// confirm localStorage is available to store config
-if (storageAvailable('localStorage')) {
-	
-	// check for url parameter to clear current config 
-	// to do this add ?clear=true to the end of the url
-	// e.g. https://www.wxconsole.in.net/?clear=true
-	
-	queryString = window.location.search;
-	urlParams = new URLSearchParams(queryString);
-	if (urlParams.get('clear')=='true'){	
-		// clear previous config values
-		for (configKey in config){
-			localStorage.removeItem(configKey);
-		}//end for
-	}//end if
-	
-	// now launch initialisation
-	settingsExist();  //get config then launch
-
-	
-} else { // local storage not supported
-    alert("Sorry, your browser does not allow local storage...");	
-}// end if
 
 

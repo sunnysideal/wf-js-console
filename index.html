@@ -9,7 +9,7 @@
 <body onresize="browserResize()">
 
 <div id="console" class="console-container" >
-	<div class="grid-tl"></div>
+	<div class="grid-tl">Top Left</div>
 	
 	<div class="grid-tm temperature-container ">
 		<div class="air_temperature_title obs_title"><span id="air_temperature_title">Temperature</span></div>
@@ -27,7 +27,7 @@
 		<div class="wind-records" id="beaufort_description">BWS</div>
 	</div>
 	<div class="grid-ml chart-container">
-		<div class="chart_title obs_title">28 Day Temperature</div>
+		<div class="chart_title obs_title">Middle Left</div>
 		<div class="chart" ></div>
 	</div>
 
@@ -42,12 +42,12 @@
 
 
 	<div class="grid-mr chart-container" >
-			<div class="chart_title obs_title">Wind</div>
-		<div id="windchartist" class="chart ct-chart ct-major-third" ></div>
+			<div class="chart_title obs_title">Middle Right</div>
+		<div class="chart" ></div>
 		</div>
 
 
-	<div class="grid-bl">
+	<div class="grid-bl">Bottom Left
 	</div>
 
 	<div class="grid-bm datebattery-container ">
@@ -77,9 +77,9 @@
 <form>
 	<label for="wfPersonalToken">Personal Token</label>
 	<input type="text" id="wfPersonalToken" name="wfPersonalToken">
-	<input type="button" value="Update" onclick="saveConfig()">
+
 	<input type="button" value="Clear" onclick="clearConfig()">
-	<input type="button" value="Proceed" onclick="settingsExist()">
+	<input type="button" value="Proceed" onclick="saveConfig()">
 	
 </form>
 </div>
