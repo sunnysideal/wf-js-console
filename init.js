@@ -8,10 +8,10 @@ Personal Token
 */
 
 // starts here, checks that all settings are present in the stored config
-function settingsExist(){
+function settingsExist(loadSettings){  //loadSettings = true if settings requested
 	missingSettings=loadConfig(); // get config and return flag if there are any missing settings
 	
-	if(missingSettings==true){ // launch settings page if there are any missing settings
+	if(missingSettings==true||loadSettings==true){ // launch settings page if there are any missing settings
 		document.getElementById('settings').style.display = "block";
 		document.getElementById('console').style.display = "none";
 	}
@@ -128,6 +128,7 @@ function saveConfig(){
 		localStorage.setItem(configKey, value);
 		
 	}
+	settingsExist();
 }
 
 
@@ -304,65 +305,37 @@ function getHumanTimeHHMM(epoch){
 // properties for the wind needle
 var needle = { base:15, height:33, degrees: 1, targetDegrees: 0, targetCardinal: "N",windSpeed:0,moving:0, direction:1, speed:3,bfDesc:"" }
 
+// initialise canvas to size of parent 
 function initWind(){
-		//get DPI
+	//get DPI
 	let dpi = window.devicePixelRatio;
 	
 	//get canvas
 	let canvas = document.getElementById('wind');
+	
 	//get context
 	let wind = canvas.getContext('2d');
-
-/*
-	function fix_dpi() {
-		//get CSS height
-		//the + prefix casts it to an integer
-		//the slice method gets rid of "px"
-		//computedStyles = getComputedStyle(canvas);
-		/*
-for (var i=0; i<computedStyles.length; i++)
-{        
-    console.log( computedStyles[i] + " " + computedStyles.getPropertyValue(computedStyles[i]));
-    
-}
-		let style_height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
-		//get CSS width
-		let style_width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-		//scale the canvas
-		canvas.setAttribute('height', style_height * dpi);
-		canvas.setAttribute('width', style_width * dpi);
-	}// end fix-dpi
-*/
-//	fix_dpi();
-/*  
-	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2)*dpi;
-	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2)*dpi;
-*/	
-//https://www.geeksforgeeks.org/how-to-sharpen-blurry-text-in-html5-canvas/
-
-	//width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-	//height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
-	//console.log(width+" "+height);
+	
 	function parentWidth(elem) {
-    return elem.parentElement.clientWidth;
-}
-	function parentHeight(elem) {
-    return elem.parentElement.clientHeight;
-}
+		return elem.parentElement.clientWidth;
+	}
 
-width=parentWidth(document.getElementById('wind'));
-height=parentHeight(document.getElementById('wind'));
+	function parentHeight(elem) {
+		return elem.parentElement.clientHeight;
+	}
+	// gets width and height of parent
+	width=parentWidth(document.getElementById('wind'));
+	height=parentHeight(document.getElementById('wind'));
 	if(width>height)
 		size=height;
 	else
 		size=width;
 	       
-		   var scale = window.devicePixelRatio;
+	var scale = window.devicePixelRatio;
         canvas.style.width = size + "px"; 
         canvas.style.height = size + "px"; 
 		canvas.width = size*scale; 
         canvas.height = size*scale; 
-		        
 		wind.scale(scale, scale);
   
   drawWind(needle);
@@ -492,33 +465,30 @@ function browserResize(){
 	initWind();
 }
 
-
+function checkLocalStorage(){
+	// confirm localStorage is available to store config
+	if (storageAvailable('localStorage')) {
+		// check for url parameter to launch settings 
+		// e.g. https://www.wxconsole.in.net?settings
+	
+		queryString = window.location.search;
+		urlParams = new URLSearchParams(queryString);
+		if (urlParams.has('settings')){	
+			settingsExist(true);
+		}//end if
+		else{
+			// now launch initialisation
+			settingsExist();  //get config then launch
+		}
+	
+	} else { // local storage not supported
+		alert("Sorry, your browser does not allow local storage...");	
+	}// end if
+}
 /**************************************************************
 Launch of scripts starts here
 ***************************************************************/
+checkLocalStorage();
 
-// confirm localStorage is available to store config
-if (storageAvailable('localStorage')) {
-	
-	// check for url parameter to clear current config 
-	// to do this add ?clear=true to the end of the url
-	// e.g. https://www.wxconsole.in.net/?clear=true
-	
-	queryString = window.location.search;
-	urlParams = new URLSearchParams(queryString);
-	if (urlParams.get('clear')=='true'){	
-		// clear previous config values
-		for (configKey in config){
-			localStorage.removeItem(configKey);
-		}//end for
-	}//end if
-	
-	// now launch initialisation
-	settingsExist();  //get config then launch
-
-	
-} else { // local storage not supported
-    alert("Sorry, your browser does not allow local storage...");	
-}// end if
 
 

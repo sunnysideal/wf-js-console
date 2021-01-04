@@ -14,7 +14,7 @@ var fifteenMinuteTemp = [];
 var fifteenMinuteEpoch = [];
 
 // ********************
-// charts here using chart.js
+// charts here using chart.js (not currently in use)
 // ********************
 
 function drawSummaryCharts(){
@@ -220,32 +220,6 @@ var dayOptions = {
 chartDayTemp = new Chartist.Line('#dailychartist', dayData,dayOptions);
 
   
-  
-  
-   var windData = {
-  // A labels array that can contain any sort of values
-  //labels: fifteenMinuteEpoch,
-  // Our series array that contains series objects or in this case series data arrays
-  series: [wspeed]
-  
-};
-var windOptions = {
-  // Don't draw the line chart points
-  showPoint: false,
-  // Disable line smoothing
-  lineSmooth: true,
-  axisX: {
-    // We can disable the grid for this axis
-    showGrid: false,
-    // and also don't show the label
-    showLabel: false
-  },
-  
-};
-chartWind = new Chartist.Line('#windchartist', windData,windOptions); 
-  
-}
-
 
 getInitialDaily()
 .then(getDailySummaryObs)
