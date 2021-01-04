@@ -13,5 +13,6 @@ Personal key: You will need to sign in to the Tempest Web App at tempestwx.com, 
 This information is then only stored in your browser storage.
 
 You can either launch the web page from https://www.wxconsole.in.net or download the source files from here and launch locally.
+Currently to get back to change any settings this is done by a URL parameter, so https://www.wxconsole.net?settings
 
-This is a project I created to teach myself about JS and HTML5 so it's probably rough around the edges, sorry, not sorry!
+This is a project I created to teach myself about JS and HTML5 so it is very rough around the edges, sorry, not sorry!
