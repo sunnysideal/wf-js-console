@@ -219,7 +219,7 @@ var dayOptions = {
 };
 chartDayTemp = new Chartist.Line('#dailychartist', dayData,dayOptions);
 
-  
+}
 
 getInitialDaily()
 .then(getDailySummaryObs)

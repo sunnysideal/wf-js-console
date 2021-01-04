@@ -117,7 +117,7 @@ function parseRapidWind(item, index){
 		case 'wind_speed':
 			needle.windSpeed=item;
 			wspeed.push(item);
-			chartWind.update();
+			
 			break;
 	}
 	
