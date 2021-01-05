@@ -271,10 +271,10 @@ function unitConvert(observation,type){
 		case 'air_temperature':
 			switch(units['units_temp']){
 				case 'c' :
-					return observation;
+					return Number(observation);
 					break;
 				case 'f' :
-					return (observation*9/5)+32;
+					return Math.round(10*Number((observation*9/5)+32))/10;
 					break;
 			}
 			break;
@@ -288,13 +288,13 @@ function unitConvert(observation,type){
 					return observation;
 					break;
 				case 'kph' :
-					return observation*3.5999916767997199862;
+					return Math.round(10*Number(observation*3.5999916767997199862))/10;
 					break;
 				case 'mph' :
-					return observation*2.2369311202577;
+					return Math.round(10*Number(observation*2.2369311202577))/10;;
 					break;
 				case 'kts' :
-					return observation*1.94384;
+					return Math.round(10*Number(observation*1.94384))/10;
 					break;
 				case 'bft' :
 					return beaufort(observation);
@@ -313,11 +313,11 @@ function cardinal(deg){
 	 if (deg>11.25 && deg<=33.75){
     return "NNE";
   }else if (deg>33.75 && deg<=56.25){
-    return "ENE";
+    return "NE";
   }else if (deg>56.25 && deg<=78.75){
-    return "E";
+    return "ENE";
   }else if (deg>78.75 && deg<=101.25){
-    return "ESE";
+    return "E";
   }else if (deg>101.25 && deg<=123.75){
     return "ESE";
   }else if (deg>123.75 && deg<=146.25){
