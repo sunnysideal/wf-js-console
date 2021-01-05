@@ -458,12 +458,12 @@ function drawWind(needle) {
 	// clear canvas
 	wind.clearRect(0, 0, width, height); // clear canvas
 	
-	// adjust dimensions based on canvas dimensions
-	wind.lineWidth = height*0.04;
-	gaugeRadius = (-wind.lineWidth-height*0.1) +height/2;
-	windFontSize = height/10;
+// adjust dimensions based on canvas dimensions
+	wind.lineWidth = size*0.04;
+	gaugeRadius = (-wind.lineWidth-size*0.1) +size/2;
+	windFontSize = size/10;
 	wind.font = windFontSize + "px Arial";
-	needle.base=height*0.04;
+	needle.base=size*0.04;
 	needle.height = needle.base*3.2;
 	
 	// set colours from CSS
