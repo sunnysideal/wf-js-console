@@ -90,7 +90,14 @@ function updateOnObservations(tempestObs){
 		chartDayTemp.update();
 	}
 	// update all html IDs
-	
+	humidity=tempestObs[8];
+	temp = tempestObs[7];
+	speed = tempestObs[2];
+	// calculate 'feels like' using Steadman Australian Formula
+	waterVapourPressure = (humidity / 100) * 6.105 * Math.exp((17.27 * temp) / (237.7 + temp));
+	apparentTemperature = temp + 0.33 * waterVapourPressure - 0.70 * speed - 4.00;
+	apparentTemperature = Math.round(apparentTemperature*10)/10;
+	updateHTML('feels_like',unitConvert(apparentTemperature,'air_temperature'));
 	updateHTML('power_mode',mode);
 	needle.bfDesc=beaufortWindForceScale[beaufort(tempestObs[2])]['Description']
 	updateHTML('beaufort_description',needle.bfDesc);

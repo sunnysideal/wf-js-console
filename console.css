@@ -74,10 +74,12 @@ font-size:60%;
 
 .air-temperature-title { grid-area: 1 / 1 / 2 / 13;text-align:center;}
 .air-temperature { font-size: 300%;grid-area: 2 / 1 /3 / 13; text-align:center;}
-.air-temperature-min { grid-area: 3/4 /4/ 7;   text-align:center;align-self:end;}
-.air-temperature-max { grid-area: 3/7/4 / 10;  text-align:center;align-self:end;}
-.air-temperature-min-time { grid-area: 4/4/5 / 7; text-align:center;}
-.air-temperature-max-time { grid-area: 4/7/5/ 10; text-align:center;}
+.feels-like-title {grid-area: 3 / 1 /4 / 13; text-align:center;align-self:end;}
+.feels-like {grid-area: 4 / 1 /5/ 13; text-align:center;}
+.air-temperature-min { grid-area: 5/4 /6/ 7;   text-align:center;align-self:end;}
+.air-temperature-max { grid-area: 5/7/6 / 10;  text-align:center;align-self:end;}
+.air-temperature-min-time { grid-area: 6/4/7 / 7; text-align:center;}
+.air-temperature-max-time { grid-area: 6/7/7/ 10; text-align:center;}
 
 
 .temperature-container {
@@ -86,7 +88,7 @@ font-size:60%;
 		width: 100%;
 	height: 100%;
 	grid-template-columns: repeat(12,1fr);
-	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 
 }
 
