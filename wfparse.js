@@ -132,4 +132,3 @@ function parseRapidWind(item, index){
 } //end parseRapidWind
 
 
-initWind();
