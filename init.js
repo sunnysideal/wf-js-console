@@ -69,7 +69,7 @@ function launchConsole(){
 		// hide settings html and show console grid
 		document.getElementById("settings").style.display = "none";
 		document.getElementById("console").style.display = "grid";
-		
+		initCanvas('wind');
 	
 		//load scripts in order, waiting to make sure data has arrived
 		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
@@ -405,13 +405,13 @@ function getHumanTimeHHMM(epoch){
 var needle = { base:15, height:33, degrees: 1, targetDegrees: 0, targetCardinal: "N",windSpeed:0,moving:0, direction:1, speed:3,bfDesc:"" }
 
 // initialise canvas to size of parent 
-function initWind(){
+function initCanvas(canvasID){
 	
 	//get canvas
-	let canvas = document.getElementById('wind');
+	let canvas = document.getElementById(canvasID);
 	
 	//get context
-	let wind = canvas.getContext('2d');
+	let ctx = canvas.getContext('2d');
 	
 	function parentWidth(elem) {
 		return elem.parentElement.clientWidth;
@@ -420,29 +420,23 @@ function initWind(){
 	function parentHeight(elem) {
 		return elem.parentElement.clientHeight;
 	}
-	// gets width and height of parent
-	width=parentWidth(document.getElementById('wind'));
-	height=parentHeight(document.getElementById('wind'));
 	
-	// creating a square, so find smallest dimension and set both to that 
-	if(width>height)
-		size=height;
-	else
-		size=width;
-	 
-	// scale canvas to match screen for sharpness 
-	var scale = window.devicePixelRatio;
-    canvas.style.width = size + "px"; 
-    canvas.style.height = size + "px"; 
-	canvas.width = size*scale; 
-    canvas.height = size*scale; 
-	wind.scale(scale, scale);
-  
-	// now that canvas is initialised draw the wind compass
-	drawWind(needle);
+	// gets width and height of parent and sets canvas to match
+	parentWidth=parentWidth(document.getElementById(canvasID));
+	parentHeight=parentHeight(document.getElementById(canvasID));
+	canvasWidth=parentWidth;
+	canvasHeight=parentHeight;
 	
-	
+	// scale canvas to match screen for sharpness
+	scale = window.devicePixelRatio;
+    canvas.style.width = canvasWidth + "px"; 
+    canvas.style.height = canvasHeight + "px"; 
+	canvas.width = canvasWidth*scale; 
+    canvas.height = canvasHeight*scale; 
+	ctx.scale(scale, scale);
+	// now that canvas is initialised it can be drawn on
 }
+
 
 // draws the wind compass based on the values in needle
 function drawWind(needle) {
@@ -452,6 +446,14 @@ function drawWind(needle) {
 	// get properties of canvas
 	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
 	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);		
+	
+	// to find radius for gauge
+	if(width >= height){
+		size=height;
+	}
+	else{
+		size=width;
+	}
 	
 	// clear canvas
 	wind.clearRect(0, 0, width, height); // clear canvas
@@ -572,7 +574,8 @@ const months = [
 
 // when browser resizes, run anything in here
 function browserResize(){
-	initWind(); //need to get new size of canvas and redraw the wind compass
+	initCanvas('wind'); //need to get new size of canvas and redraw the wind compass
+	drawWind(needle);
 }
 
 // for saving settings in browser local storage, and if all good continue to launch console
