@@ -47,7 +47,7 @@ const getWFConfig = async () => {
 	const wfStationObs = await stationResponse.json();
 	
 	units=wfStationObs['station_units'];
-	console.log(units);
+
 	updateUnitLabels();
 	
 	
@@ -271,10 +271,11 @@ function unitConvert(observation,type){
 		case 'air_temperature':
 			switch(units['units_temp']){
 				case 'c' :
-					return Number(observation);
+							
+					return parseFloat(observation).toFixed(1);
 					break;
 				case 'f' :
-					return Math.round(10*Number((observation*9/5)+32))/10;
+					return parseFloat(Math.round(10*Number((observation*9/5)+32))/10).toFixed(1);
 					break;
 			}
 			break;

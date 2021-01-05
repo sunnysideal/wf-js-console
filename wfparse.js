@@ -103,9 +103,9 @@ function updateOnObservations(tempestObs){
 	updateHTML('beaufort_description',needle.bfDesc);
 	
 
-	updateHTML('air_temperature_max',unitConvert(maximumTemp,'air_temperature').toFixed(1));
+	updateHTML('air_temperature_max',unitConvert(maximumTemp,'air_temperature'));
 	updateHTML('air_temperature_max_time',getHumanTimeHHMM(maximumTempEpoch));
-	updateHTML('air_temperature_min',unitConvert(minimumTemp,'air_temperature').toFixed(1));
+	updateHTML('air_temperature_min',unitConvert(minimumTemp,'air_temperature'));
 	updateHTML('air_temperature_min_time',getHumanTimeHHMM(minimumTempEpoch));
 	
 	updateDateTime(tempestObs[0]);
