@@ -444,8 +444,8 @@ function drawWind(needle) {
 	//get context
 	let wind = canvas.getContext('2d');
 	// get properties of canvas
-	width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-	height = getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);		
+	width = Number(getComputedStyle(canvas).getPropertyValue("width").slice(0, -2));
+	height = Number(getComputedStyle(canvas).getPropertyValue("height").slice(0, -2));		
 	
 	// to find radius for gauge
 	if(width >= height){
