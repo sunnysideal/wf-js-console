@@ -21,7 +21,8 @@ const parseTempest = async (minuteObs) => {
 	// rounding because websocket obs don't come on the minute and the chart updates
 	if((60* Math.round(minuteObs[0]/60)) % 900 == 0) {
 		fifteenMinuteEpoch.push(getHumanTimeHHMM(minuteObs[0]));
-		fifteenMinuteTemp.push(minuteObs[7]);
+		//fifteenMinuteTemp.push(minuteObs[7]);
+		fifteenMinuteTemp.push(unitConvert(minuteObs[7],'air_temperature'));
     }
 
 }// end parseTempest
@@ -56,6 +57,7 @@ function updateOnObservations(tempestObs){
 	humidity=tempestObs[8];
 	temp = tempestObs[7];
 	speed = tempestObs[2];
+	
 	// calculate 'feels like' using Steadman Australian Formula
 	waterVapourPressure = (humidity / 100) * 6.105 * Math.exp((17.27 * temp) / (237.7 + temp));
 	apparentTemperature = temp + 0.33 * waterVapourPressure - 0.70 * speed - 4.00;
