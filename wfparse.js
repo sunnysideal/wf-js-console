@@ -1,41 +1,4 @@
 
-//***************************
-// MQTT
-//***************************
-/*
-// Create a client instance
-client = new Paho.MQTT.Client("test.mosquitto.org", 8080, "sside564");
-
-// set callback handlers
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
-
-// connect the client
-client.connect({onSuccess:onConnect});
-
-
-// called when the client connects
-function onConnect() {
-  // Once a connection has been made, make a subscription and send a message.
-  console.log("onConnect");
-  //client.subscribe("ssidewx/obs");
-  //message = new Paho.MQTT.Message("Hello");
-  //message.destinationName = "World";
-  //client.send(message);
-}
-
-// called when the client loses its connection
-function onConnectionLost(responseObject) {
-  if (responseObject.errorCode !== 0) {
-    console.log("onConnectionLost:"+responseObject.errorMessage);
-  }
-}
-
-// called when a message arrives
-function onMessageArrived(message) {
-  console.log("onMessageArrived:"+message.payloadString);
-}
-*/
 // takes a single set of tempest observatons and processes it
 const parseTempest = async (minuteObs) => {
 	
@@ -128,7 +91,7 @@ function parseRapidWind(item, index){
 		
 		case 'wind_speed':
 			needle.windSpeed=item;
-			wspeed.push(item);
+
 			
 			break;
 	}
@@ -139,3 +102,40 @@ function parseRapidWind(item, index){
 } //end parseRapidWind
 
 
+//***************************
+// MQTT
+//***************************
+/*
+// Create a client instance
+client = new Paho.MQTT.Client("test.mosquitto.org", 8080, "sside564");
+
+// set callback handlers
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+// connect the client
+client.connect({onSuccess:onConnect});
+
+
+// called when the client connects
+function onConnect() {
+  // Once a connection has been made, make a subscription and send a message.
+  console.log("onConnect");
+  //client.subscribe("ssidewx/obs");
+  //message = new Paho.MQTT.Message("Hello");
+  //message.destinationName = "World";
+  //client.send(message);
+}
+
+// called when the client loses its connection
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+  }
+}
+
+// called when a message arrives
+function onMessageArrived(message) {
+  console.log("onMessageArrived:"+message.payloadString);
+}
+*/

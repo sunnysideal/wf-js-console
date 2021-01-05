@@ -3,7 +3,7 @@
 // **************************
 // websocket for live updates
 // **************************
-
+async function launchSockets(units){
 // create socket
 let socket = new WebSocket("wss://ws.weatherflow.com/swd/data?token=" + config['wfPersonalToken'] );
 
@@ -57,6 +57,6 @@ socket.onclose = function(event) {
 socket.onerror = function(error) {
 	alert(`[error] ${error.message}`);
 };
-
+}
 // all initialised and ready to go
 //rotateWindNeedle();

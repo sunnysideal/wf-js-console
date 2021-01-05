@@ -7,108 +7,200 @@ Personal Token
 (Anything else that it needs to get added, for instance chosen units to display...)
 */
 
-// starts here, checks that all settings are present in the stored config
-function settingsExist(loadSettings){  //loadSettings = true if settings requested
-	missingSettings=loadConfig(); // get config and return flag if there are any missing settings
-	
-	if(missingSettings==true||loadSettings==true){ // launch settings page if there are any missing settings
-		document.getElementById('settings').style.display = "block";
-		document.getElementById('console').style.display = "none";
-	}
-	else{ // if the settings are there, proceed with starting up
-		getWFConfig();
-		
-	}
-}
-
-// send request to get station config using personal token
-const getWFConfig = async () => {
-	// request all station config
-	fetchString="https://swd.weatherflow.com/swd/rest/stations?token="+config['wfPersonalToken'];
-	//fetchString="https://swd.weatherflow.com/swd/rest/stations?token=4ab487cb-3d50-48ba-a0c1-6b03f05c6156";
-	const response = await fetch(fetchString);
-	const wfConfigJson = await response.json(); //extract JSON from the http response
-	
-	// add tempestID to config
-	wfConfigJson['stations'][0]['devices'].forEach(getTempestID);
-	
-	config['lat']=wfConfigJson['stations'][0]['latitude'];
-	config['lon']=wfConfigJson['stations'][0]['longitude'];
-	// get station_id
-	for (const [key, value] of Object.entries(wfConfigJson['stations'][0])) {
-		if(key=='station_id'){
-		config['station_id']=value;
-	}}
-
-
-	// use station_id to get units in use on station
-	fetchString="https://swd.weatherflow.com/swd/rest/observations/station/"+config['station_id']+"?token="+config['wfPersonalToken'];
-	const stationResponse = await fetch(fetchString);
-	const wfStationObs = await stationResponse.json();
-	
-	units=wfStationObs['station_units'];
-
-	updateUnitLabels();
-	
-	
-	// finally launch console with config complete
-	launchConsole();
-}// end getWFConfig
-
-
-// get Tempest Device ID from config string
-function getTempestID(device){
-	if(device['device_type']== "ST"){
-		config['wfTempestID'] = device['device_id'];
-	}
-}
-
-
-// to be main launch point of console if all requirements are met
-function launchConsole(){
-		// hide settings html and show console grid
-		document.getElementById("settings").style.display = "none";
-		document.getElementById("console").style.display = "grid";
-		initCanvas('wind');
-	
-		//load scripts in order, waiting to make sure data has arrived
-		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
-		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
-		.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
-		.then(() => loadScript('wfparse.js'))
-		.then(() => loadScript('wflowrest.js'))
-
-		.catch(() => console.error('Something went wrong.'))
-
-}
-
-// config required
-var config = { 'wfPersonalToken':'','wfTempestID':'' };
-// stored in browser local storage
 var storedConfig = { 'wfPersonalToken':'' };
 
+// weatherflow observation field maps
+var tempestObsFields=['time_epoch', 'wind_lull', 'wind_avg', 'wind_gust', 'wind_direction', 'wind_sample_interval', 'station_pressure', 'air_temperature', 'relative_humidity', 'illuminance', 'uv', 'solar_radiation', 'rain_accumulated', 'precipitation_type', 'lightning_strike_avg_distance', 'lightning_strike_count', 'battery', 'report_interval','local_daily_rain_accumm','rain_accumm_final','local_daily_rain_accum_final','precipitation_analysis_type'];
+var rapidWindObsFields=['time_epoch','wind_speed','wind_direction'];
 
-// get config from file
-function loadConfig(){
-	missingSettings = false; // flag for confirming settings are present
+// for when bucket = 1440 minutes, different format from WF rest API
+var obsSummaryFields=[ 'TIMESTAMP', 'PRESSURE', 'PRESSURE_HIGH','PRESSURE_LOW','TEMP','TEMP_HIGH','TEMP_LOW','HUMIDITY', 'HUMIDITY_HIGH', 'HUMIDITY_LOW', 'LUX', 'LUX_HIGH', 'LUX_LOW', 'UV', 'UV_HIGH', 'UV_LOW', 'SOLAR_RADIATION', 'SOLAR_RADIATION_HIGH', 'SOLAR_RADIATION_LOW', 'WIND_AVG', 'WIND_GUST', 'WIND_LULL', 'WIND_DIR', 'WIND_INTERVAL', 'STRIKE_COUNT', 'STRIKE_AVG_DISTANCE', 'RECORD_COUNT', 'BATTERY', 'PRECIP_ACCUM_TODAY_LOCAL', 'PRECIP_ACCUM_TODAY_LOCAL_FINAL', 'PRECIP_MINS_TODAY_LOCAL', 'PRECIP_MINS_TODAY_LOCAL_FINAL', 'PRECIP_TYPE', 'PRECIP_ANALYSIS_TYPE']; 
+
+
+// custom derived fields map
+var derivedFields=['power_mode','obs_time'];
+var unitLabels={};
+// structures to hold data
+var todayJSON = {};
+
+var obsToday = { 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[] 	};
+var obs7Days = {	 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[]}; 
+var obsSummary = { 'TIMESTAMP' : [], 'PRESSURE' : [], 'PRESSURE_HIGH' : [], 'PRESSURE_LOW' : [], 'TEMP' : [], 'TEMP_HIGH' : [], 'TEMP_LOW' : [], 'HUMIDITY' : [], 'HUMIDITY_HIGH' : [], 'HUMIDITY_LOW' : [], 'LUX' : [], 'LUX_HIGH' : [], 'LUX_LOW' : [], 'UV' : [], 'UV_HIGH' : [], 'UV_LOW' : [], 'SOLAR_RADIATION' : [], 'SOLAR_RADIATION_HIGH' : [], 'SOLAR_RADIATION_LOW' : [], 'WIND_AVG' : [], 'WIND_GUST' : [], 'WIND_LULL' : [], 'WIND_DIR' : [], 'WIND_INTERVAL' : [], 'STRIKE_COUNT' : [], 'STRIKE_AVG_DISTANCE' : [], 'RECORD_COUNT' : [], 'BATTERY' : [], 'PRECIP_ACCUM_TODAY_LOCAL' : [], 'PRECIP_ACCUM_TODAY_LOCAL_FINAL' : [], 'PRECIP_MINS_TODAY_LOCAL' : [], 'PRECIP_MINS_TODAY_LOCAL_FINAL' : [], 'PRECIP_TYPE' : [], 'PRECIP_ANALYSIS_TYPE' : [] };
+
+var fifteenMinuteTemp = [];
+var fifteenMinuteEpoch = [];
+
+
+{
+	if(checkLocalStorage()){ // if local storage can be used in browser
+		storedConfig = loadStoredConfig(storedConfig);
+		if( checkURLParamsSettings() || !confirmSettings(storedConfig)){ // if settings have been requested or are missing
+			toggleSettingsPage(true);
+		}
+		else
+		{
+			(async () => {
+			config = await getWFConfig(storedConfig['wfPersonalToken'])  // get the config from the WF API
+			updateUnitLabels(config['units']);
+			launchConsole(config); // launch the console
+			})();
+		}
+	}
+}
+
+
+// check that browser local storage is available for use
+function checkLocalStorage(){
+	// confirm localStorage is available to store config
+	if (storageAvailable('localStorage')) {
+		return true;
+	} else { // local storage not supported
+		alert("Sorry, your browser does not allow local storage...");	
+		return false;
+	}// end if
+}
+
+// get config from local storage
+function loadStoredConfig(storedConfig){
+	storedConfig = { 'wfPersonalToken':'' }; // stored in browser local storage
 	
 	// either read each defined key from storage or prompt user
 	for (configKey in storedConfig){
 		// if the value is already in local storage read from there
 		if (localStorage.getItem(configKey)) {
-			config[configKey]=localStorage.getItem(configKey);
-			updateFormValue(configKey,config[configKey]);
+			storedConfig[configKey] = localStorage.getItem(configKey);
+			updateFormValue(configKey,storedConfig[configKey]);
 		}
-		else { // if not in local need to launch settings
-			missingSettings=true; 
-		} // end if
 	}// end for
-	return missingSettings;
+
+	return storedConfig;
 }
+
+function confirmSettings(storedConfig){
+		confirmed = true;
+		
+		for (configKey in storedConfig){
+			if (storedConfig[configKey]==""){
+				confirmed=false;
+			}
+		}
+		return confirmed;
+}
+
+function checkURLParamsSettings(){
+	queryString = window.location.search;
+
+	urlParams = new URLSearchParams(queryString);
+	// check for url parameter to launch settings 
+	// e.g. https://www.wxconsole.in.net?settings
+	if (urlParams.has('settings')){	
+		return true;
+	}//end if
+	else{
+		// no settings param
+		return false;
+	}
+	
+}
+
+function toggleSettingsPage(displaySettings){
+	if(displaySettings){
+		document.getElementById('settings').style.display = "block";
+		document.getElementById('console').style.display = "none";	
+	}
+	else{
+		document.getElementById('settings').style.display = "none";
+		document.getElementById('console').style.display = "grid";	
+	
+	}
+}
+
+// send request to get station config using personal token
+async function getWFConfig(wfPersonalToken){
+	config={};
+	config['wfPersonalToken']=wfPersonalToken;
+	// request all station config
+	fetchString="https://swd.weatherflow.com/swd/rest/stations?token="+wfPersonalToken;
+	const response = await fetch(fetchString);
+	const wfStationsJson = await response.json(); //extract JSON from the http response
+	
+	// add tempestID to config
+	wfStationsJson['stations'][0]['devices'].forEach(function(device) {
+		if(device['device_type']== "ST"){
+			config['wfTempestID']=device['device_id'];
+			//wfTempestID = device['device_id'];
+		}
+	});
+
+	config['latitude']=wfStationsJson['stations'][0]['latitude'];
+	config['longitude']=wfStationsJson['stations'][0]['longitude'];
+//	latitude=wfStationsJson['stations'][0]['latitude'];
+	//longitude=wfStationsJson['stations'][0]['longitude'];
+	
+	// get station_id & public_name from wf API
+
+	for (const [key, value] of Object.entries(wfStationsJson['stations'][0])) {
+		if(key=='station_id'){
+			config['station_id'] = value;
+			//station_id=value;}
+		}
+		if(key=='public_name'){
+			config['public_name']=value;
+			public_name=value;}		
+		}
+
+	// use station_id to get units in use on station
+	fetchString="https://swd.weatherflow.com/swd/rest/observations/station/"+config['station_id']+"?token="+wfPersonalToken;
+	const stationResponse = await fetch(fetchString);
+	const wfStationObs = await stationResponse.json();
+
+	for (const [key, value] of Object.entries(wfStationObs)) {
+	if(key=='station_units'){
+		config['units'] = value;
+	}}	
+	
+	return config;
+
+}// end getWFConfig
+
+// to be main launch point of console if all requirements are met
+function launchConsole(config){
+		// hide settings html and show console grid
+		toggleSettingsPage(false);
+		initCanvas('wind');  // initialise the wind compass canvas
+
+		//load scripts in order, waiting to make sure data has arrived
+		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
+		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
+		.then(() => loadScript('suncalc.js'))
+		//.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
+		.then(() => loadScript('wfparse.js'))
+		.then(() => loadScript('wflowrest.js'))
+		.then(() => loadScript('wflowsocket.js'))
+		.then(() => populateSunRiseSet(config['latitude'],config['longitude']))
+		.then(() => getDailySummaryObs(config))
+		.then(() => getInitialDaily(config))
+		.then(() => launchSockets(config['units']))
+		
+		
+
+		.catch(() => console.error('Something went wrong.'))
+
+}
+
 
 /***********************************************
 * Utility scripts
 ***********************************************/
+async function populateSunRiseSet(latitude,longitude){
+	let sunTimes = SunCalc.getTimes(new Date(), latitude, longitude);
+	let sunriseStr = sunTimes.sunrise.getHours() + ':' + sunTimes.sunrise.getMinutes();
+	let sunsetStr = sunTimes.sunset.getHours() + ':' + sunTimes.sunset.getMinutes();
+	let solarNoonStr = sunTimes.solarNoon.getHours() + ':' + sunTimes.solarNoon.getMinutes();
+	updateHTML('sunrise_time', sunriseStr);
+	updateHTML('sunset_time', sunsetStr);
+	updateHTML('solarnoon_time', solarNoonStr);
+}
 
 // update element HTML
 function updateHTML(updateElement,value){
@@ -150,13 +242,15 @@ function saveConfig(){
 		localStorage.setItem(configKey, value);
 		
 	}
-	settingsExist();
+	//reload page after config saved
+	window.location.replace(`${location.protocol}//${location.host}${location.pathname}`);
 }
 
 
 
 // function to load scripts in correct order
-const loadScript = src => {
+//const loadScript = src => {
+function loadScript(src){
   return new Promise((resolve, reject) => {
     const script = document.createElement('script')
     script.type = 'text/javascript'
@@ -210,17 +304,6 @@ function storageAvailable(type) {
 
 
 
-// site wide variables
-
-// weatherflow observation field maps
-var tempestObsFields=['time_epoch', 'wind_lull', 'wind_avg', 'wind_gust', 'wind_direction', 'wind_sample_interval', 'station_pressure', 'air_temperature', 'relative_humidity', 'illuminance', 'uv', 'solar_radiation', 'rain_accumulated', 'precipitation_type', 'lightning_strike_avg_distance', 'lightning_strike_count', 'battery', 'report_interval','local_daily_rain_accumm','rain_accumm_final','local_daily_rain_accum_final','precipitation_analysis_type'];
-var rapidWindObsFields=['time_epoch','wind_speed','wind_direction'];
-// for when bucket = 1440 minutes, different format from WF rest API
-var obsSummaryFields=[ 'TIMESTAMP', 'PRESSURE', 'PRESSURE_HIGH','PRESSURE_LOW','TEMP','TEMP_HIGH','TEMP_LOW','HUMIDITY', 'HUMIDITY_HIGH', 'HUMIDITY_LOW', 'LUX', 'LUX_HIGH', 'LUX_LOW', 'UV', 'UV_HIGH', 'UV_LOW', 'SOLAR_RADIATION', 'SOLAR_RADIATION_HIGH', 'SOLAR_RADIATION_LOW', 'WIND_AVG', 'WIND_GUST', 'WIND_LULL', 'WIND_DIR', 'WIND_INTERVAL', 'STRIKE_COUNT', 'STRIKE_AVG_DISTANCE', 'RECORD_COUNT', 'BATTERY', 'PRECIP_ACCUM_TODAY_LOCAL', 'PRECIP_ACCUM_TODAY_LOCAL_FINAL', 'PRECIP_MINS_TODAY_LOCAL', 'PRECIP_MINS_TODAY_LOCAL_FINAL', 'PRECIP_TYPE', 'PRECIP_ANALYSIS_TYPE']; 
-var wspeed = [];
-// custom derived fields map
-var derivedFields=['power_mode','obs_time'];
-var unitLabels={};
 
 
 // utility function to fetch the variables from the CSS
@@ -233,7 +316,7 @@ function updateValues(observation,index){
 	updateHTML(tempestObsFields[index],unitConvert(observation,tempestObsFields[index]));
 }
 
-function updateUnitLabels(){
+async function updateUnitLabels(units){
 
 	for (unit in units){
 			
@@ -263,13 +346,13 @@ function updateUnitLabels(){
 		updateHTML(unit,label);
 
 	}
-			console.log(unitLabels);
+			
 }
 
 function unitConvert(observation,type){
 	switch(type){
 		case 'air_temperature':
-			switch(units['units_temp']){
+			switch(config['units']['units_temp']){
 				case 'c' :
 							
 					return parseFloat(observation).toFixed(1);
@@ -284,7 +367,7 @@ function unitConvert(observation,type){
 		case 'wind_avg'	:
 		case 'wind_gust':
 		case 'wind_speed':
-			switch(units['units_wind']){
+			switch(config['units']['units_wind']){
 				case 'mps' :
 					return observation;
 					break;
@@ -503,6 +586,7 @@ function drawWind(needle) {
 // updates values in needle then draws and will animate until target angle is met
 function rotateWindNeedle(){
 	// get direction to move compass in 
+
 	change = needle.targetDegrees-needle.degrees;	// difference between current angle and target
 	if(change !=0){  // if there is a difference between current direction and new direction
 		if( (( change + 360) % 360 > 180) && needle.moving==0){ //(clockwise, anti-clockwise whichever is closest)
@@ -579,31 +663,8 @@ function browserResize(){
 	drawWind(needle);
 }
 
-// for saving settings in browser local storage, and if all good continue to launch console
-function checkLocalStorage(){
-	// confirm localStorage is available to store config
-	if (storageAvailable('localStorage')) {
-		// check for url parameter to launch settings 
-		// e.g. https://www.wxconsole.in.net?settings
-	
-		queryString = window.location.search;
-		urlParams = new URLSearchParams(queryString);
-		if (urlParams.has('settings')){	
-			settingsExist(true);
-		}//end if
-		else{
-			// now launch initialisation
-			settingsExist();  //get config then launch
-		}
-	
-	} else { // local storage not supported
-		alert("Sorry, your browser does not allow local storage...");	
-	}// end if
-}
-/**************************************************************
-Launch of scripts starts here
-***************************************************************/
-checkLocalStorage();
+
+
 
 
 
