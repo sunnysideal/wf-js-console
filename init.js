@@ -21,7 +21,7 @@ var obsSummaryFields=[ 'TIMESTAMP', 'PRESSURE', 'PRESSURE_HIGH','PRESSURE_LOW','
 var derivedFields=['power_mode','obs_time'];
 var unitLabels={};
 // structures to hold data
-var todayJSON = {};
+//var todayJSON = {};
 
 var obsToday = { 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[] 	};
 var obs7Days = {	 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[]}; 
@@ -42,6 +42,7 @@ var fifteenMinuteEpoch = [];
 			(async () => {
 			config = await getWFConfig(storedConfig['wfPersonalToken'])  // get the config from the WF API
 			updateUnitLabels(config['units']);
+			document.title=config['public_name'];
 			launchConsole(config); // launch the console
 			})();
 		}
