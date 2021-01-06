@@ -159,7 +159,7 @@ async function getWFConfig(wfPersonalToken){
 	if(key=='station_units'){
 		config['units'] = value;
 	}}	
-	
+	console.log(config['units']);
 	return config;
 
 }// end getWFConfig
@@ -340,8 +340,23 @@ async function updateUnitLabels(units){
 					break;
 					default: label = units[unit];
 				}
+			
+			
+			case 'units_pressure':
+				switch (units[unit]){
+					case 'mb': label="mb";
+						break;
+					case 'hpa' : label='hpa';
+						break;
+					default: label = units[unit];
+					
+					
+					
+				}
+				
 			break;	
 			default:label="";
+		
 			
 		}
 		unitLabels[unit]=label;
@@ -352,6 +367,7 @@ async function updateUnitLabels(units){
 }
 
 function unitConvert(observation,type){
+
 	switch(type){
 		case 'air_temperature':
 			switch(config['units']['units_temp']){
@@ -371,7 +387,7 @@ function unitConvert(observation,type){
 		case 'wind_speed':
 			switch(config['units']['units_wind']){
 				case 'mps' :
-					return observation;
+					return Math.round(10*observation)/10;
 					break;
 				case 'kph' :
 					return Math.round(10*Number(observation*3.5999916767997199862))/10;
@@ -387,6 +403,25 @@ function unitConvert(observation,type){
 					break;
 			}
 		break;
+	
+		case 'sea_level_pressure':
+		case 'station_pressure':
+
+			switch(config['units']['units_pressure']){
+				case 'mb':
+				case 'hpa':
+					return Math.round(10*observation)/10;
+					break;
+				case 'inhg':
+					return Math.round(100*(observation/33.864))/100;
+					break;
+				
+				case 'mmhg':
+					return Math.round(100*observation/1.333)/100;
+					break;
+					
+			}
+			break;
 		default:
 			return observation;
 	}

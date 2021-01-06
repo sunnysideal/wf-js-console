@@ -13,7 +13,7 @@ fetchString="https://swd.weatherflow.com/swd/rest/better_forecast?station_id="+c
 	const forecastJson = await response.json(); //extract JSON from the http response
 	currentConditions=forecastJson['current_conditions'];
 	//forecastNextHour = forecastJson
-	
+/*	
 console.log("current: ");
 console.log(currentConditions);
 console.log("Daily: ");
@@ -22,8 +22,10 @@ console.log("Hourly: ");
 console.log(forecastJson['forecast']['hourly'][0]);
 console.log(forecastJson);
 console.log(currentConditions['pressure_trend']);
-	
-	
+*/
+updateHTML('pressure_trend',currentConditions['pressure_trend']);
+updateHTML('sea_level_pressure',unitConvert(currentConditions['sea_level_pressure'],'sea_level_pressure'));
+		
 }// end getTodayObs
 
 // function to send request to weatherflow rest interface for all summary observations for 1 month
