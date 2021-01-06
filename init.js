@@ -171,9 +171,10 @@ function launchConsole(config){
 		initCanvas('wind');  // initialise the wind compass canvas
 
 		//load scripts in order, waiting to make sure data has arrived
-		loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js')
-		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
-		.then(() => loadScript('suncalc.js'))
+		loadScript('suncalc.js')
+
+//		.then(() => loadScript('https://cdn.jsdelivr.net/npm/chart.js@2.8.0'))
+//		.then(() => loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js'))
 		//.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
 		.then(() => loadScript('wfparse.js'))
 		.then(() => loadScript('wflowrest.js'))
@@ -183,7 +184,7 @@ function launchConsole(config){
 		.then(() => getInitialDaily(config))
 		.then(() => launchSockets(config['units']))
 		
-		
+
 
 		.catch(() => console.error('Something went wrong.'))
 

@@ -25,14 +25,39 @@
 	<div class="grid-tm conditions-container">Conditions/Forecast</div>
 
 	<div class="grid-tr wind-container"> 	
-
+		
 		<div class="chart-title obs-title">Wind</div>
-		<div class="chart" ><canvas id="wind" class="chart" ></canvas></div>
-		<div class="wind-records"><span class="beaufort_description">BWS</span></div>
+		
+		<div class="wind-compass"><canvas id="wind" class="chart"  ></canvas>
+		
+		
+		<div class="wind-compass-container" >
+			<div class="wind-gust-title">gust</div>
+			<div class="wind-gust"><span class="wind_gust"></span></div>
+			<div class="wind-avg-title">avg</div>
+			<div class="wind-avg"><span class="wind_avg"></span></div>
+			
+		</div>	
+		</div>
+		<div class="wind-beaufort"><span class="beaufort_description">BWS</span></div>
+			
 	</div>
-	<div class="grid-mm solar-container">
-		<div class="chart-title obs-title">Solar</div>
-		<div class="chart" ></div>
+	<div class="conditions"><span class="conditions"></span></div>
+	
+
+
+	
+	
+	<div class="grid-mm" >
+		<div class="ephemeris-container ">
+			<div class="obs-title"><span class="solar-title">Solar</span></div>
+			<div class="sunrise-image">rise</div>
+			<div class="sunset-image">set</div>
+			<div class="solarnoon-image">noon</div>
+			<div class = "solarnoon-time"><span class="solarnoon_time">time</span></div>
+			<div class = "sunrise-time"><span class="sunrise_time">time</span></div>
+			<div class="sunset-time"><span class="sunset_time">time</span></div>
+		</div>
 	</div>
 
 
@@ -64,13 +89,7 @@
 	</div>
 
 
-	<div class="grid-br ephemeris-container ">
-		<div class="sunrise-image">rise</div>
-		<div class="sunset-image">set</div>
-		<div class="solarnoon-image">noon</div>
-		<div class = "solarnoon-time"><span class="solarnoon_time">time</span></div>
-		<div class = "sunrise-time"><span class="sunrise_time">time</span></div>
-		<div class="sunset-time"><span class="sunset_time">time</span></div>
+	<div class="grid-br">
 
 	</div>
 
