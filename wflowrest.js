@@ -85,7 +85,8 @@ var dayOptions = {
   },
   
 };
-chartDayTemp = new Chartist.Line('#dailychartist', dayData,dayOptions);
+// charts removed from console main screen
+//chartDayTemp = new Chartist.Line('#dailychartist', dayData,dayOptions);
 
 }
 

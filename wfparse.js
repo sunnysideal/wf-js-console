@@ -21,7 +21,6 @@ const parseTempest = async (minuteObs) => {
 	// rounding because websocket obs don't come on the minute and the chart updates
 	if((60* Math.round(minuteObs[0]/60)) % 900 == 0) {
 		fifteenMinuteEpoch.push(getHumanTimeHHMM(minuteObs[0]));
-		//fifteenMinuteTemp.push(minuteObs[7]);
 		fifteenMinuteTemp.push(unitConvert(minuteObs[7],'air_temperature'));
     }
 
@@ -49,10 +48,11 @@ function updateOnObservations(tempestObs){
 	
 
 	// if it's a 15 minute interval, time for a daily chart update!
-	if((60* Math.round(tempestObs[0]/60)) % 900 == 0){
+	// chart removed from console front screen
+	/*if((60* Math.round(tempestObs[0]/60)) % 900 == 0){
 		
 		chartDayTemp.update();
-	}
+	}*/
 	// update all html IDs
 	humidity=tempestObs[8];
 	temp = tempestObs[7];
