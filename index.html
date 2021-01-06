@@ -9,9 +9,9 @@
 <body onresize="browserResize()">
 
 <div id="console" class="console-container" >
-	<div class="grid-tl">Top Left</div>
+
 	
-	<div class="grid-tm temperature-container ">
+	<div class="grid-tl temperature-container ">
 		<div class="air-temperature-title obs-title">Temperature</div>
 		<div class="air-temperature"><span class="air_temperature">-.-</span><span class="units_temp">--</span></div>
 		<div class="feels-like-title obs-title">Feels Like</div>
@@ -21,6 +21,8 @@
 		<div class="air-temperature-max"><span class="air_temperature_max" >-.-</span><span class="units_temp">--</span></div>
 		<div class="air-temperature-max-time"><span class="air_temperature_max_time">--.--</span></div>
 	</div>
+	
+	<div class="grid-tm conditions-container">Conditions/Forecast</div>
 
 	<div class="grid-tr wind-container"> 	
 
@@ -28,39 +30,37 @@
 		<div class="chart" ><canvas id="wind" class="chart" ></canvas></div>
 		<div class="wind-records"><span class="beaufort_description">BWS</span></div>
 	</div>
-	<div class="grid-ml chart-container">
-		<div class="chart-title obs-title">Middle Left</div>
+	<div class="grid-mm solar-container">
+		<div class="chart-title obs-title">Solar</div>
 		<div class="chart" ></div>
 	</div>
 
 
 
-	<div class="grid-mm chart-container" >
-		<div class="chart-title obs-title">Today Temperature</div>
-		<div id="dailychartist" class="chart ct-chart ct-major-third" ></div>
+	<div class="grid-ml rain-container" >
+		<div class="chart-title obs-title">Rainfall</div>
+		<div class="chart" ></div>
 	</div>
 
 
 
 
-	<div class="grid-mr chart-container" >
-			<div class="chart_title obs_title">Middle Right</div>
+	<div class="grid-mr pressure-container" >
+			<div class="chart_title obs_title">Barometer</div>
 		<div class="chart" ></div>
 		</div>
 
 
-	<div class="grid-bl">Bottom Left
-	</div>
-
-	<div class="grid-bm datebattery-container ">
-	
-		<div class="date"><span class="obs_date">Date</span></div>
-		<div class="time"><span class="obs_time">Time</span></div>
+	<div class="grid-bl battery-container">
 		<div class="battery-title obs-title"  >Battery</div>
 		<div class="power-mode-title obs-title">Power Mode</div>
 		<div class="battery-value"><span class="battery">-.---</span> V</div>
 		<div class="power-mode"><span class="power_mode"></span></div>
+	</div>
 
+	<div class="grid-bm date-container ">
+		<div class="date"><span class="obs_date">Date</span></div>
+		<div class="time"><span class="obs_time">Time</span></div>
 	</div>
 
 
