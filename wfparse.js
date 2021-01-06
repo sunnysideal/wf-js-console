@@ -63,11 +63,11 @@ function updateOnObservations(tempestObs){
 	apparentTemperature = temp + 0.33 * waterVapourPressure - 0.70 * speed - 4.00;
 	apparentTemperature = Math.round(apparentTemperature*10)/10;
 	updateHTML('feels_like',unitConvert(apparentTemperature,'air_temperature'));
+	
 	updateHTML('power_mode',mode);
-	needle.bfDesc=beaufortWindForceScale[beaufort(tempestObs[2])]['Description']
-	updateHTML('beaufort_description',needle.bfDesc);
 	
 
+	updateHTML('beaufort_description',beaufortWindForceScale[beaufort(tempestObs[2])]['Description']);
 	updateHTML('air_temperature_max',unitConvert(maximumTemp,'air_temperature'));
 	updateHTML('air_temperature_max_time',getHumanTimeHHMM(maximumTempEpoch));
 	updateHTML('air_temperature_min',unitConvert(minimumTemp,'air_temperature'));
