@@ -51,7 +51,7 @@ body, html {
 }
 
 .obs-title{
-	color: var(--titles-colour); font-size:90%; text-align:center;
+	color: var(--titles-colour); grid-area:obs-title;font-size:90%; text-align:center;
 }
 
 .air-temperature-min, .air-temperature-min-time{
@@ -94,22 +94,48 @@ font-size:60%;
 
 
 
+
+.wind-beaufort {grid-area:3;text-align:center;align-self:center;}
+
+
 .chart-title  { grid-area: 1 ;text-align:center;}
 .chart { grid-area: 2 ; width:100%;height:100%;justify-self:center;position:relative; text-align:center; }
+				
 
-.wind-records{grid-area:3;text-align:center;align-self:center;}
+.wind-gust-title {grid-area:gust-title;text-align:center;align-self:end;}
+.wind-gust {grid-area:gust;text-align:center;align-self:start;}
+.wind-avg-title {grid-area:avg-title;text-align:center;align-self:end;}
+.wind-avg {grid-area:avg;text-align:center;align-self:start;}
 
-  .wind-container {
-
+.wind-compass {style="zIndex=-1;left:0px;top:0px;position:absolute;"}
+  .wind-compass-container {
+	grid-area: 2;
 	display:grid;
-	position:relative;
+left:0px;top:0px;position:absolute;
 		width: 100%;
 	height: 100%;
-	grid-template-columns: minmax(0, 1fr);
-	grid-template-rows: minmax(0, 1fr) minmax(0, 5fr) minmax(0, 1fr);
+	grid-template-areas: 
+			" . gust-title . . .  avg-title ."
+			" . gust  . . .  avg ."
+			". . . . . . ."
+			". . . . . . ."
+			". . . . . . ."
+
+            ". . . . . . .";
+	grid-template-columns:  minmax(0, 0.3fr) minmax(0, 1fr) minmax(0, 1fr)  minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.3fr);
+	grid-template-rows:  minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) ;
 
 }
 
+.wind-container {
+	display:grid;
+	position:relative;
+	width: 100%;
+	height: 100%;
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: minmax(0, 1fr) minmax(0, 6fr) minmax(0, 1fr);
+
+}
 
 .chart-container {
 	display:grid;
@@ -153,22 +179,26 @@ font-size:60%;
 }
 
 
-.sunrise-image {font-size:60%;grid-area: 1/1/2/2;text-align:center; }
-.solarnoon-image {font-size:60%;grid-area: 1/2/2/3; text-align:center;}
-.sunset-image {font-size:60%;grid-area: 1/3/2/4;text-align:center; }
+.sunrise-image {font-size:60%;grid-area: image-rise;text-align:center; }
+.solarnoon-image {font-size:60%;grid-area: image-noon; text-align:center;}
+.sunset-image {font-size:60%;grid-area: image-set;text-align:center; }
 
-.sunrise-time {font-size:75%;grid-area: 2/1/2/2;text-align:center;}
-.solarnoon-time {font-size:75%;grid-area:2/2/2/3;text-align:center;}
-.sunset-time {font-size:75%;grid-area: 2/3/2/4;text-align:center;}
+.sunrise-time {font-size:75%;grid-area: time-rise;text-align:center;}
+.solarnoon-time {font-size:75%;grid-area:time-noon;text-align:center;}
+.sunset-time {font-size:75%;grid-area: time-set;text-align:center;}
 
 
 .ephemeris-container {
 	display:grid;
 	position:relative;
 		width: 100%;
-	height: 100%;
+	height: 100%;  
+	grid-template-areas: 
+			"obs-title obs-title obs-title"
+			"image-rise image-noon image-set"
+            "time-rise time-noon time-set";
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .grid-tl {grid-area: 1/1/2/2;background-color:var(--observation-background-colour);}

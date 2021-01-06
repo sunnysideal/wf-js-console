@@ -2,6 +2,29 @@
 // get data from wf using rest api
 // *******************************
 
+//*****************************
+// Forecast
+
+async function getForecast(){
+	// request all values from today in 1 minute buckets
+fetchString="https://swd.weatherflow.com/swd/rest/better_forecast?station_id="+config['station_id']+"&token="+config['wfPersonalToken']+"&lat="+config['latitude']+"&lon="+config['longitude'];
+	//fetchString="https://swd.weatherflow.com/swd/rest/observations/device/"+config['wfTempestID']+"?day_offset=0&token="+config['wfPersonalToken']
+	const response = await fetch(fetchString);
+	const forecastJson = await response.json(); //extract JSON from the http response
+	currentConditions=forecastJson['current_conditions'];
+	//forecastNextHour = forecastJson
+	
+console.log("current: ");
+console.log(currentConditions);
+console.log("Daily: ");
+console.log(forecastJson['forecast']['daily'][0]);
+console.log("Hourly: ");
+console.log(forecastJson['forecast']['hourly'][0]);
+console.log(forecastJson);
+console.log(currentConditions['pressure_trend']);
+	
+	
+}// end getTodayObs
 
 // function to send request to weatherflow rest interface for all summary observations for 1 month
 // const getDailySummaryObs = async () => {

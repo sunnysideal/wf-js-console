@@ -36,6 +36,7 @@ socket.onmessage = function(event) {
 		// extract array of observations from message and call parseObs function for each item in array 
 		parseTempest(message['obs'][0])
 		.then(() => updateOnObservations(message['obs'][0]))
+		.then(() => getForecast())
 	}
 
 	else if (message['type']=='rapid_wind'){
