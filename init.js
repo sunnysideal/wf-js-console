@@ -159,7 +159,7 @@ async function getWFConfig(wfPersonalToken){
 	if(key=='station_units'){
 		config['units'] = value;
 	}}	
-	console.log(config['units']);
+	
 	return config;
 
 }// end getWFConfig
@@ -321,7 +321,7 @@ function updateValues(observation,index){
 async function updateUnitLabels(units){
 
 	for (unit in units){
-			
+		
 		switch(unit){
 			case 'units_temp':
 				switch (units[unit]){
@@ -340,7 +340,7 @@ async function updateUnitLabels(units){
 					break;
 					default: label = units[unit];
 				}
-			
+			break;
 			
 			case 'units_pressure':
 				switch (units[unit]){
@@ -359,6 +359,7 @@ async function updateUnitLabels(units){
 		
 			
 		}
+		
 		unitLabels[unit]=label;
 		updateHTML(unit,label);
 
@@ -376,6 +377,7 @@ function unitConvert(observation,type){
 					return parseFloat(observation).toFixed(1);
 					break;
 				case 'f' :
+					
 					return parseFloat(Math.round(10*Number((observation*9/5)+32))/10).toFixed(1);
 					break;
 			}
