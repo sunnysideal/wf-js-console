@@ -14,21 +14,21 @@
 	<div class="grid-tl temperature-container ">
 		<div class="air-temperature-title obs-title">Temperature</div>
 		<div class="air-temperature"><span class="air_temperature">-.-</span><span class="units_temp">--</span></div>
-		<div class="feels-like-title obs-title">Feels Like</div>
-		<div class="feels-like"><span class="feels_like">-.-</span><span class="units_temp">--</span></div>
+		<div class="feels-like-title obs-title">Wind Chill</div>
+		<div class="feels-like"><span class="canada_feels_like">-.-</span><span class="units_temp">--</span></div>
 		<div class="air-temperature-min"><span class="air_temperature_min" >-.-</span><span class="units_temp">--</span></div>
 		<div class="air-temperature-min-time"><span class="air_temperature_min_time">--.--</span></div>		
 		<div class="air-temperature-max"><span class="air_temperature_max" >-.-</span><span class="units_temp">--</span></div>
 		<div class="air-temperature-max-time"><span class="air_temperature_max_time">--.--</span></div>
 	</div>
 	
-	<div class="grid-tm conditions-container">Conditions/Forecast</div>
+
 
 	<div class="grid-tr wind-container"> 	
 		
 		<div class="chart-title obs-title">Wind</div>
-		
-		<div class="wind-compass"><canvas id="wind" class="chart"  ></canvas>
+		<div class="wind-holder">
+		<div class="wind-compass"><canvas id="wind"  ></canvas></div>
 		
 		
 		<div class="wind-compass-container" >
@@ -37,19 +37,19 @@
 			<div class="wind-avg-title">avg</div>
 			<div class="wind-avg"><span class="wind_avg"></span></div>
 			
-		</div>	
+		</div>
 		</div>
 		<div class="wind-beaufort"><span class="beaufort_description">BWS</span></div>
 			
 	</div>
-	<div class="grid-tm conditions"><span class="conditions"></span></div>
+	<div class="grid-tm conditions"><span class="conditions">Conditions/Forecast</span></div>
 	
 
 
 	
 	
 	<div class="grid-mm" >
-		<div class="ephemeris-container ">
+		<div class="solar-container ">
 			<div class="obs-title"><span class="solar-title">Solar</span></div>
 			<div class="sunrise-image">rise</div>
 			<div class="sunset-image">set</div>
@@ -79,8 +79,7 @@
 
 
 	<div class="grid-bl battery-container">
-		<div class="battery-title obs-title"  >Battery: <span class="battery">-.---</span> V</div>
-		<div class="power-mode-title obs-title">Power Mode: <span class="power_mode"></span></div>
+		<div class="battery-title obs-title"  >Battery: <span class="battery">-.---</span> V     Power Mode: <span class="power_mode"></span></div>
 
 	</div>
 

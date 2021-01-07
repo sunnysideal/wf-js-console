@@ -56,17 +56,22 @@ function updateOnObservations(tempestObs){
 	// update all html IDs
 	humidity=tempestObs[8];
 	temp = tempestObs[7];
-	speed = tempestObs[2];
+	wind = tempestObs[2];
 	
-	// calculate 'feels like' using Steadman Australian Formula
-	waterVapourPressure = (humidity / 100) * 6.105 * Math.exp((17.27 * temp) / (237.7 + temp));
-	apparentTemperature = temp + 0.33 * waterVapourPressure - 0.70 * speed - 4.00;
-	apparentTemperature = Math.round(apparentTemperature*10)/10;
-	updateHTML('feels_like',unitConvert(apparentTemperature,'air_temperature'));
+	// calculate 'wind chill' using Canada formula (which appears to be in international use)
+	// straight from https://weather.gc.ca/windchill/js/wind_chill.js
+	wind = Number(wind*3.5999916767997199862); // convert m/s to km/h for formula
+	
+	if(wind>=5){
+      windChill = 13.12 + (0.6215 * temp) - (11.37 * Math.pow(wind, 0.16)) + (0.3965 * temp * Math.pow(wind, 0.16));
+    }
+    else{
+      windChill = parseFloat(temp) + ((((-1.59) + (0.1345*temp))/5) * wind);
+    }
+	windChill = Math.round(10*windChill)/10;
+	updateHTML('canada_feels_like',unitConvert(windChill,'air_temperature'));
 	
 	updateHTML('power_mode',mode);
-	
-
 	updateHTML('beaufort_description',beaufortWindForceScale[beaufort(tempestObs[2])]['Description']);
 	updateHTML('air_temperature_max',unitConvert(maximumTemp,'air_temperature'));
 	updateHTML('air_temperature_max_time',getHumanTimeHHMM(maximumTempEpoch));

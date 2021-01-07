@@ -6,14 +6,14 @@
 // Forecast
 
 async function getForecast(){
-	// request all values from today in 1 minute buckets
-fetchString="https://swd.weatherflow.com/swd/rest/better_forecast?station_id="+config['station_id']+"&token="+config['wfPersonalToken']+"&lat="+config['latitude']+"&lon="+config['longitude'];
-	//fetchString="https://swd.weatherflow.com/swd/rest/observations/device/"+config['wfTempestID']+"?day_offset=0&token="+config['wfPersonalToken']
+	// request forecast values
+	fetchString="https://swd.weatherflow.com/swd/rest/better_forecast?station_id="+config['station_id']+"&token="+config['wfPersonalToken']+"&lat="+config['latitude']+"&lon="+config['longitude'];
+	
 	const response = await fetch(fetchString);
 	const forecastJson = await response.json(); //extract JSON from the http response
 	currentConditions=forecastJson['current_conditions'];
-	//forecastNextHour = forecastJson
-/*	
+	
+/*
 console.log("current: ");
 console.log(currentConditions);
 console.log("Daily: ");
