@@ -25,12 +25,12 @@ settings div hidden by default
 
 .ct-series-a .ct-line {
   /* Set the colour of this series line */
- 
+
   /* Control the thikness of your lines */
   stroke-width: 2px;
    stroke: var(--page-text-colour);
 }
-  
+
 body, html {
   width:100%;  height:100%; margin:0; padding:0;
   overflow:hidden;
@@ -79,7 +79,7 @@ font-size:60%;
 	height: 100%;
 	grid-template-columns: repeat(12,1fr);
 	grid-template-rows: minmax(0, 10%) minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-		grid-template-areas: 
+		grid-template-areas:
 			" title title title title title title title title title title title title "
 			" deg deg deg deg deg deg deg deg deg deg deg deg"
 			" feels-title feels-title  feels-title feels-title feels-title feels-title feels-title feels-title feels-title feels-title feels-title feels-title "
@@ -93,7 +93,7 @@ font-size:60%;
 
 .chart-title  { grid-area: 1 ;text-align:center;}
 .chart { grid-area: 2 ; width:100%;height:100%;justify-self:center;position:relative; text-align:center; }
-				
+
 
 .wind-gust-title {grid-area:gust-title;text-align:center;align-self:end;}
 .wind-gust {grid-area:gust;text-align:center;align-self:start;}
@@ -101,7 +101,7 @@ font-size:60%;
 .wind-avg {grid-area:avg;text-align:center;align-self:start;}
 .wind-holder {grid-row:2;position:relative;width:100%;height:100%;}
 .wind-compass {zIndex=-1;left:0px;top:0px;position:absolute;width:100%;height:100%;}
- 
+
  .wind-compass-container {
 	display:grid;
 	left:0px;
@@ -109,7 +109,7 @@ font-size:60%;
 	position:absolute;
 	width: 100%;
 	height: 100%;
-	grid-template-areas: 
+	grid-template-areas:
 			" . gust-title .  avg-title ."
 			" . gust  .  avg ."
 			". . . . ."
@@ -186,19 +186,26 @@ font-size:60%;
 .sunrise-time {font-size:75%;grid-area: time-rise;text-align:center;}
 .solarnoon-time {font-size:75%;grid-area:time-noon;text-align:center;}
 .sunset-time {font-size:75%;grid-area: time-set;text-align:center;}
-
+.illuminance-title {font-size:60%;grid-area: title-illuminance;text-align:center;}
+.uv-title {font-size:60%;grid-area: title-uv;text-align:center;}
+.solar-radiation-title {font-size:60%;grid-area: title-solar-radiation;text-align:center;}
+.illuminance-value {font-size:60%;grid-area: illuminance;text-align:center;}
+.uv-value {font-size:60%;grid-area: uv;text-align:center;}
+.solar-radiation {font-size:60%;grid-area: radiation;text-align:center;}
 
 .solar-container {
 	display:grid;
 	position:relative;
 		width: 100%;
-	height: 100%;  
-	grid-template-areas: 
+	height: 100%;
+	grid-template-areas:
 			"obs-title obs-title obs-title"
 			"image-rise image-noon image-set"
-            "time-rise time-noon time-set";
+            "time-rise time-noon time-set"
+						"title-illuminance title-uv title-solar-radiation"
+						"illuminance uv radiation";
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-	grid-template-rows: minmax(0, 10%) minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: minmax(0, 10%) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .grid-tl {grid-area: top-left;background-color:var(--observation-background-colour);}
@@ -224,9 +231,9 @@ font-size:60%;
 	height: 96%;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.1fr);
-	grid-template-areas: 
+	grid-template-areas:
 		" top-left top-centre top-right"
 		" centre-left centre-centre centre-right"
 		" bottom-left bottom-centre bottom-right";
-	
+
 }

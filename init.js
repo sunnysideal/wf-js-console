@@ -1,6 +1,6 @@
 /*
 Configuration scripts and initial variables
-Making use of browser local storage for 
+Making use of browser local storage for
 Personal Token
 
 
@@ -14,17 +14,15 @@ var tempestObsFields=['time_epoch', 'wind_lull', 'wind_avg', 'wind_gust', 'wind_
 var rapidWindObsFields=['time_epoch','wind_speed','wind_direction'];
 
 // for when bucket = 1440 minutes, different format from WF rest API
-var obsSummaryFields=[ 'TIMESTAMP', 'PRESSURE', 'PRESSURE_HIGH','PRESSURE_LOW','TEMP','TEMP_HIGH','TEMP_LOW','HUMIDITY', 'HUMIDITY_HIGH', 'HUMIDITY_LOW', 'LUX', 'LUX_HIGH', 'LUX_LOW', 'UV', 'UV_HIGH', 'UV_LOW', 'SOLAR_RADIATION', 'SOLAR_RADIATION_HIGH', 'SOLAR_RADIATION_LOW', 'WIND_AVG', 'WIND_GUST', 'WIND_LULL', 'WIND_DIR', 'WIND_INTERVAL', 'STRIKE_COUNT', 'STRIKE_AVG_DISTANCE', 'RECORD_COUNT', 'BATTERY', 'PRECIP_ACCUM_TODAY_LOCAL', 'PRECIP_ACCUM_TODAY_LOCAL_FINAL', 'PRECIP_MINS_TODAY_LOCAL', 'PRECIP_MINS_TODAY_LOCAL_FINAL', 'PRECIP_TYPE', 'PRECIP_ANALYSIS_TYPE']; 
-
+var obsSummaryFields = ['TIMESTAMP', 'PRESSURE', 'PRESSURE_HIGH', 'PRESSURE_LOW', 'TEMP', 'TEMP_HIGH', 'TEMP_LOW', 'HUMIDITY', 'HUMIDITY_HIGH', 'HUMIDITY_LOW', 'LUX', 'LUX_HIGH', 'LUX_LOW', 'UV', 'UV_HIGH', 'UV_LOW', 'SOLAR_RADIATION', 'SOLAR_RADIATION_HIGH', 'SOLAR_RADIATION_LOW', 'WIND_AVG', 'WIND_GUST', 'WIND_LULL', 'WIND_DIR', 'WIND_INTERVAL', 'STRIKE_COUNT', 'STRIKE_AVG_DISTANCE', 'RECORD_COUNT', 'BATTERY', 'PRECIP_ACCUM_TODAY_LOCAL', 'PRECIP_ACCUM_TODAY_LOCAL_FINAL', 'PRECIP_MINS_TODAY_LOCAL', 'PRECIP_MINS_TODAY_LOCAL_FINAL', 'PRECIP_TYPE', 'PRECIP_ANALYSIS_TYPE'];
 
 // custom derived fields map
 var derivedFields=['power_mode','obs_time'];
 var unitLabels={};
-// structures to hold data
-//var todayJSON = {};
+
 
 var obsToday = { 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[] 	};
-var obs7Days = {	 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[]}; 
+var obs7Days = {	 	'time_epoch':[], 	'wind_lull':[], 	'wind_avg':[], 	'wind_gust':[], 	'wind_direction':[], 	'wind_sample_interval':[], 	'station_pressure':[], 	'air_temperature':[], 	'relative_humidity':[], 	'illuminance':[], 	'uv':[], 	'solar_radiation':[], 	'rain_accumulated':[], 	'precipitation_type':[], 	'lightning_strike_avg_distance':[], 	'lightning_strike_count':[], 	'battery':[], 	'report_interval':[], 	'local_daily_rain_accumm':[], 	'rain_accumm_final':[], 	'local_daily_rain_accum_final':[], 	'precipitation_analysis_type':[]};
 var obsSummary = { 'TIMESTAMP' : [], 'PRESSURE' : [], 'PRESSURE_HIGH' : [], 'PRESSURE_LOW' : [], 'TEMP' : [], 'TEMP_HIGH' : [], 'TEMP_LOW' : [], 'HUMIDITY' : [], 'HUMIDITY_HIGH' : [], 'HUMIDITY_LOW' : [], 'LUX' : [], 'LUX_HIGH' : [], 'LUX_LOW' : [], 'UV' : [], 'UV_HIGH' : [], 'UV_LOW' : [], 'SOLAR_RADIATION' : [], 'SOLAR_RADIATION_HIGH' : [], 'SOLAR_RADIATION_LOW' : [], 'WIND_AVG' : [], 'WIND_GUST' : [], 'WIND_LULL' : [], 'WIND_DIR' : [], 'WIND_INTERVAL' : [], 'STRIKE_COUNT' : [], 'STRIKE_AVG_DISTANCE' : [], 'RECORD_COUNT' : [], 'BATTERY' : [], 'PRECIP_ACCUM_TODAY_LOCAL' : [], 'PRECIP_ACCUM_TODAY_LOCAL_FINAL' : [], 'PRECIP_MINS_TODAY_LOCAL' : [], 'PRECIP_MINS_TODAY_LOCAL_FINAL' : [], 'PRECIP_TYPE' : [], 'PRECIP_ANALYSIS_TYPE' : [] };
 
 var fifteenMinuteTemp = [];
@@ -56,7 +54,7 @@ function checkLocalStorage(){
 	if (storageAvailable('localStorage')) {
 		return true;
 	} else { // local storage not supported
-		alert("Sorry, your browser does not allow local storage...");	
+		alert("Sorry, your browser does not allow local storage...");
 		return false;
 	}// end if
 }
@@ -64,7 +62,7 @@ function checkLocalStorage(){
 // get config from local storage
 function loadStoredConfig(storedConfig){
 	storedConfig = { 'wfPersonalToken':'' }; // stored in browser local storage
-	
+
 	// either read each defined key from storage or prompt user
 	for (configKey in storedConfig){
 		// if the value is already in local storage read from there
@@ -79,7 +77,7 @@ function loadStoredConfig(storedConfig){
 
 function confirmSettings(storedConfig){
 		confirmed = true;
-		
+
 		for (configKey in storedConfig){
 			if (storedConfig[configKey]==""){
 				confirmed=false;
@@ -92,27 +90,27 @@ function checkURLParamsSettings(){
 	queryString = window.location.search;
 
 	urlParams = new URLSearchParams(queryString);
-	// check for url parameter to launch settings 
+	// check for url parameter to launch settings
 	// e.g. https://www.wxconsole.in.net?settings
-	if (urlParams.has('settings')){	
+	if (urlParams.has('settings')){
 		return true;
 	}//end if
 	else{
 		// no settings param
 		return false;
 	}
-	
+
 }
 
 function toggleSettingsPage(displaySettings){
 	if(displaySettings){
 		document.getElementById('settings').style.display = "block";
-		document.getElementById('console').style.display = "none";	
+		document.getElementById('console').style.display = "none";
 	}
 	else{
 		document.getElementById('settings').style.display = "none";
-		document.getElementById('console').style.display = "grid";	
-	
+		document.getElementById('console').style.display = "grid";
+
 	}
 }
 
@@ -124,7 +122,7 @@ async function getWFConfig(wfPersonalToken){
 	fetchString="https://swd.weatherflow.com/swd/rest/stations?token="+wfPersonalToken;
 	const response = await fetch(fetchString);
 	const wfStationsJson = await response.json(); //extract JSON from the http response
-	
+
 	// add tempestID to config
 	wfStationsJson['stations'][0]['devices'].forEach(function(device) {
 		if(device['device_type']== "ST"){
@@ -137,7 +135,7 @@ async function getWFConfig(wfPersonalToken){
 	config['longitude']=wfStationsJson['stations'][0]['longitude'];
 //	latitude=wfStationsJson['stations'][0]['latitude'];
 	//longitude=wfStationsJson['stations'][0]['longitude'];
-	
+
 	// get station_id & public_name from wf API
 
 	for (const [key, value] of Object.entries(wfStationsJson['stations'][0])) {
@@ -147,7 +145,7 @@ async function getWFConfig(wfPersonalToken){
 		}
 		if(key=='public_name'){
 			config['public_name']=value;
-			public_name=value;}		
+			public_name=value;}
 		}
 
 	// use station_id to get units in use on station
@@ -158,8 +156,8 @@ async function getWFConfig(wfPersonalToken){
 	for (const [key, value] of Object.entries(wfStationObs)) {
 	if(key=='station_units'){
 		config['units'] = value;
-	}}	
-	
+	}}
+
 	return config;
 
 }// end getWFConfig
@@ -183,7 +181,7 @@ function launchConsole(config){
 		.then(() => getDailySummaryObs(config))
 		.then(() => getInitialDaily(config))
 		.then(() => launchSockets(config['units']))
-		
+
 
 
 		.catch(() => console.error('Something went wrong.'))
@@ -218,7 +216,7 @@ function updateHTML(updateElement,value){
 function updateFormValue(updateElement,value){
 	if(document.getElementById(updateElement)){
           document.getElementById(updateElement).value=value;
-	
+
 	}
 }// end updateFormValue
 
@@ -242,7 +240,7 @@ function saveConfig(){
 	for (configKey in storedConfig){
 		value = getFormValue(configKey);
 		localStorage.setItem(configKey, value);
-		
+
 	}
 	//reload page after config saved
 	window.location.replace(`${location.protocol}//${location.host}${location.pathname}`);
@@ -275,7 +273,7 @@ on Startup:
 	Check that it is available (If not, exit)
 	If values exist, read from there
 	If values don't exist, prompt for the values
-*******************************************************************	
+*******************************************************************
 */
 
 // function to check availability of local storage for config
@@ -321,7 +319,7 @@ function updateValues(observation,index){
 async function updateUnitLabels(units){
 
 	for (unit in units){
-		
+
 		switch(unit){
 			case 'units_temp':
 				switch (units[unit]){
@@ -330,8 +328,8 @@ async function updateUnitLabels(units){
 					case 'f': label="&degF";
 					break;
 				}
-			break;	
-			
+			break;
+
 			case 'units_wind':
 				switch (units[unit]){
 					case 'mps': label="m/s";
@@ -341,7 +339,7 @@ async function updateUnitLabels(units){
 					default: label = units[unit];
 				}
 			break;
-			
+
 			case 'units_pressure':
 				switch (units[unit]){
 					case 'mb': label="mb";
@@ -349,22 +347,22 @@ async function updateUnitLabels(units){
 					case 'hpa' : label='hpa';
 						break;
 					default: label = units[unit];
-					
-					
-					
+
+
+
 				}
-				
-			break;	
+
+			break;
 			default:label="";
-		
-			
+
+
 		}
-		
+
 		unitLabels[unit]=label;
 		updateHTML(unit,label);
 
 	}
-			
+
 }
 
 function unitConvert(observation,type){
@@ -373,16 +371,16 @@ function unitConvert(observation,type){
 		case 'air_temperature':
 			switch(config['units']['units_temp']){
 				case 'c' :
-							
+
 					return parseFloat(observation).toFixed(1);
 					break;
 				case 'f' :
-					
+
 					return parseFloat(Math.round(10*Number((observation*9/5)+32))/10).toFixed(1);
 					break;
 			}
 			break;
-			
+
 		case 'wind_lull':
 		case 'wind_avg'	:
 		case 'wind_gust':
@@ -405,7 +403,7 @@ function unitConvert(observation,type){
 					break;
 			}
 		break;
-	
+
 		case 'sea_level_pressure':
 		case 'station_pressure':
 
@@ -417,18 +415,18 @@ function unitConvert(observation,type){
 				case 'inhg':
 					return Math.round(100*(observation/33.864))/100;
 					break;
-				
+
 				case 'mmhg':
 					return Math.round(100*observation/1.333)/100;
 					break;
-					
+
 			}
 			break;
 		default:
 			return observation;
 	}
-		
-	
+
+
 }
 
 
@@ -464,7 +462,7 @@ function cardinal(deg){
   }else if (deg>326.25 && deg<=348.75){
     return "NNW";
   }else{
-    return "N"; 
+    return "N";
   }
 }// end cardinal
 // Beaufort Wind Force Scale based on data at https://www.rmets.org/resource/beaufort-scale
@@ -514,7 +512,7 @@ beaufortWindForceScale = [
 {Description:'Violent Storm',Specification:'Very rarely experienced; accompanied by widespread damage.'},
 {Description:'Hurricane',Specification:'Devastation'}
 ];
-	
+
 
 // return hours and minutes string in "hh:mm" format from epoch time
 function getHumanTimeHHMM(epoch){
@@ -527,15 +525,15 @@ function getHumanTimeHHMM(epoch){
 // properties for the wind needle
 var needle = { base:15, height:33, degrees: 1, targetDegrees: 0, targetCardinal: "N",windSpeed:0,moving:0, direction:1, speed:3,bfDesc:"" }
 
-// initialise canvas to size of parent 
+// initialise canvas to size of parent
 function initCanvas(canvasID){
-	
+
 	//get canvas
 	let canvas = document.getElementById(canvasID);
-	
+
 	//get context
 	let ctx = canvas.getContext('2d');
-	
+
 	function parentWidth(elem) {
 		return elem.parentElement.clientWidth;
 	}
@@ -543,19 +541,19 @@ function initCanvas(canvasID){
 	function parentHeight(elem) {
 		return elem.parentElement.clientHeight;
 	}
-	
+
 	// gets width and height of parent and sets canvas to match
 	parentWidth=parentWidth(document.getElementById(canvasID));
 	parentHeight=parentHeight(document.getElementById(canvasID));
 	canvasWidth=parentWidth;
 	canvasHeight=parentHeight;
-	
+
 	// scale canvas to match screen for sharpness
 	scale = window.devicePixelRatio;
-    canvas.style.width = canvasWidth + "px"; 
-    canvas.style.height = canvasHeight + "px"; 
-	canvas.width = canvasWidth*scale; 
-    canvas.height = canvasHeight*scale; 
+    canvas.style.width = canvasWidth + "px";
+    canvas.style.height = canvasHeight + "px";
+	canvas.width = canvasWidth*scale;
+    canvas.height = canvasHeight*scale;
 	ctx.scale(scale, scale);
 	// now that canvas is initialised it can be drawn on
 }
@@ -568,8 +566,8 @@ function drawWind(needle) {
 	let wind = canvas.getContext('2d');
 	// get properties of canvas
 	width = Number(getComputedStyle(canvas).getPropertyValue("width").slice(0, -2));
-	height = Number(getComputedStyle(canvas).getPropertyValue("height").slice(0, -2));		
-	
+	height = Number(getComputedStyle(canvas).getPropertyValue("height").slice(0, -2));
+
 	// to find radius for gauge
 	if(width >= height){
 		size=height;
@@ -577,10 +575,10 @@ function drawWind(needle) {
 	else{
 		size=width;
 	}
-	
+
 	// clear canvas
 	wind.clearRect(0, 0, width, height); // clear canvas
-	
+
 // adjust dimensions based on canvas dimensions
 	wind.lineWidth = size*0.04;
 	gaugeRadius = (-wind.lineWidth-size*0.1) +size/2;
@@ -588,17 +586,17 @@ function drawWind(needle) {
 	wind.font = windFontSize + "px Arial";
 	needle.base=size*0.04;
 	needle.height = needle.base*3.2;
-	
+
 	// set colours from CSS
   	wind.fillStyle = cssvar('--page-text-colour');
 	wind.strokeStyle = cssvar('--wind-gauge-colour');
-  	
+
 	// print wind direction, speed and Beaufort description in centre of dial
 	wind.textAlign = "center";
 	wind.fillText(needle.targetCardinal,width/2,-0.2*windFontSize+height/2);
 	wind.fillText(Math.round(unitConvert(needle.windSpeed,'wind_speed')*10)/10+" "+unitLabels['units_wind'],width/2,0.8*windFontSize+height/2);
 	//wind.fillText(needle.bfDesc,width/2,1.3*windFontSize+height/2);
-	
+
 	// draw dial
 	wind.beginPath();
   	wind.fillStyle = cssvar('--wind-needle-colour');
@@ -606,7 +604,7 @@ function drawWind(needle) {
 	wind.translate(width/2,height/2);
 	wind.arc(0, 0, gaugeRadius, 0, Math.PI * 2); //draw outer arc
 	wind.stroke();
-  
+
 	// draw needle
 	wind.beginPath();
 	wind.rotate(needle.degrees*Math.PI/180); //rotate to draw at current deg value
@@ -615,16 +613,16 @@ function drawWind(needle) {
 	wind.lineTo(0,needle.height); 	// draw to point
 	wind.lineTo(-needle.base,0);	// draw back to other end of base line
     wind.fill();					// close fill triangle
-	
+
 	wind.translate(0,gaugeRadius+wind.lineWidth/2); // move back to centre of canvas
 	wind.rotate(-needle.degrees*Math.PI/180);		//rotate back to beginning
 	wind.translate(-width/2,-height/2);				// move back to (0,0) ready for next animation
-	
+
 }
 
 // updates values in needle then draws and will animate until target angle is met
 function rotateWindNeedle(){
-	// get direction to move compass in 
+	// get direction to move compass in
 
 	change = needle.targetDegrees-needle.degrees;	// difference between current angle and target
 	if(change !=0){  // if there is a difference between current direction and new direction
@@ -633,13 +631,13 @@ function rotateWindNeedle(){
 		}
 		needle.moving=1; // to show that we've started animation
 		needle.degrees = needle.degrees + needle.direction; // add/remove degree per animation loop
-		
+
 		// deal with 0/360 degree
 		if (needle.degrees > 359)
 			needle.degrees=0;
 		if (needle.degrees < 0)
 			needle.degrees=359;
-		
+
 		// draw the canvas then request next frame in animation
 		drawWind(needle);
 		requestAnimationFrame(rotateWindNeedle);
@@ -653,7 +651,7 @@ function rotateWindNeedle(){
 // updates date and time fields in HTML with human readable values
 function updateDateTime(epoch){
 		var d = new Date(epoch*1000);
-		
+
 		date = days[d.getDay()]+", "+d.getDate() + " "+months[d.getMonth()]+" "+d.getFullYear();
 		time = pad(d.getHours(),2)+":"+pad(d.getMinutes(),2)+":"+pad(d.getSeconds(),2);
 		updateHTML("obs_date",date);
@@ -662,7 +660,7 @@ function updateDateTime(epoch){
 
 // pad leading zeros in numbers
 function pad(n, len) {
-   
+
     s = n.toString();
     if (s.length < len) {
         s = ('0000000000' + s).slice(-len);
@@ -701,9 +699,3 @@ function browserResize(){
 	initCanvas('wind'); //need to get new size of canvas and redraw the wind compass
 	drawWind(needle);
 }
-
-
-
-
-
-
