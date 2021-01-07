@@ -315,12 +315,25 @@ function updateValues(observation,index){
 
 	updateHTML(tempestObsFields[index],unitConvert(observation,tempestObsFields[index]));
 }
-
+// ********************************************************
+// update unit labels given the labels chosen in the WF app
+// ********************************************************
 async function updateUnitLabels(units){
-
+console.log(units);
 	for (unit in units){
 
 		switch(unit){
+			case 'units_precip':
+				switch (units[unit]){
+					case 'mm': label="mm";
+						break;
+					case 'in': label="in";
+						break;
+					case 'cm': label="cm";
+						break;
+				}
+			break;
+
 			case 'units_temp':
 				switch (units[unit]){
 					case 'c': label="&degC";
@@ -368,6 +381,28 @@ async function updateUnitLabels(units){
 function unitConvert(observation,type){
 
 	switch(type){
+		case 'rain_accumulated':
+		case 'local_daily_rain_accumm':
+		switch(config['units']['units_precip']){
+			case 'mm':
+			return parseFloat(observation).toFixed(1);
+				break;
+			case 'in':
+			return parseFloat(Math.round(100*observation/25.4)/100).toFixed(1);
+				break;
+			case 'cm':
+			return parseFloat(10*Math.round(observation/10)/10).toFixed(1);
+				break;
+			case 'c' :
+
+				return parseFloat(observation).toFixed(1);
+				break;
+			case 'f' :
+
+				return parseFloat(Math.round(10*Number((observation*9/5)+32))/10).toFixed(1);
+				break;
+		}
+		break;
 		case 'air_temperature':
 			switch(config['units']['units_temp']){
 				case 'c' :
@@ -422,7 +457,8 @@ function unitConvert(observation,type){
 
 			}
 			break;
-		default:
+
+			default:
 			return observation;
 	}
 
