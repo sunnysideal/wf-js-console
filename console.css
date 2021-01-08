@@ -202,19 +202,30 @@ font-size:60%;
 }
 */
 
-.sunrise-image {font-size:60%;grid-area: image-rise;text-align:center; }
-.solarnoon-image {font-size:60%;grid-area: image-noon; text-align:center;}
-.sunset-image {font-size:60%;grid-area: image-set;text-align:center; }
+.sunrise-image {font-size:100%;grid-area: image-rise;text-align:center;align-self:end; }
+.solarnoon-image {font-size:100%;grid-area: image-noon; text-align:center;align-self: center;}
+.sunset-image {font-size:100%;grid-area: image-set;text-align:center;align-self:end; }
 
-.sunrise-time {font-size:75%;grid-area: time-rise;text-align:center;}
-.solarnoon-time {font-size:75%;grid-area:time-noon;text-align:center;}
-.sunset-time {font-size:75%;grid-area: time-set;text-align:center;}
-.illuminance-title {font-size:60%;grid-area: title-illuminance;text-align:center;}
-.uv-title {font-size:60%;grid-area: title-uv;text-align:center;}
-.solar-radiation-title {font-size:60%;grid-area: title-solar-radiation;text-align:center;}
+.today-sunrise-time {font-size:50%;grid-area: today-time-rise;text-align:center;}
+.today-solarnoon-time {font-size:50%;grid-area:today-time-noon;text-align:center;}
+.today-sunset-time {font-size:50%;grid-area: today-time-set;text-align:center;}
+.tomorrow-sunrise-time {font-size:50%;grid-area: tomorrow-time-rise;text-align:center;}
+.tomorrow-solarnoon-time {font-size:50%;grid-area:tomorrow-time-noon;text-align:center;}
+.tomorrow-sunset-time {font-size:50%;grid-area: tomorrow-time-set;text-align:center;}
+
+.solar-today-title {font-size:60%;grid-area:today-title;text-align:center;}
+.solar-tomorrow-title {font-size:40%;grid-area:tomorrow-title;text-align:center;align-self: end;}
+.solar-tomorrow-text {font-size:50%;grid-area:tomorrow-text;text-align:center;align-self: center;}
+
+.illuminance-title {font-size:60%;grid-area: title-illuminance;text-align:center;align-self: end;}
+.uv-title {font-size:60%;grid-area: title-uv;text-align:center;align-self: end;}
+.solar-radiation-title {font-size:60%;grid-area: title-solar-radiation;text-align:center;align-self: end;}
 .illuminance-value {font-size:60%;grid-area: illuminance;text-align:center;}
 .uv-value {font-size:60%;grid-area: uv;text-align:center;}
 .solar-radiation {font-size:60%;grid-area: radiation;text-align:center;}
+
+
+
 
 .solar-container {
 	display:grid;
@@ -224,11 +235,16 @@ font-size:60%;
 	grid-template-areas:
 			"obs-title obs-title obs-title"
 			"image-rise image-noon image-set"
-            "time-rise time-noon time-set"
+
+            "today-time-rise today-time-noon today-time-set"
+
+						"tomorrow-title tomorrow-title tomorrow-title "
+						"tomorrow-time-rise tomorrow-time-noon tomorrow-time-set"
+						"tomorrow-text tomorrow-text tomorrow-text "
 						"title-illuminance title-uv title-solar-radiation"
 						"illuminance uv radiation";
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-	grid-template-rows: minmax(0, 10%) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: minmax(0, 10%) minmax(0, 0.7fr) auto  minmax(0, 0.4fr) minmax(0, 0.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .grid-tl {grid-area: top-left;background-color:var(--observation-background-colour);}
