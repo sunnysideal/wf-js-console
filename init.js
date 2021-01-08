@@ -878,3 +878,19 @@ function browserResize() {
   initCanvas('wind'); //need to get new size of canvas and redraw the wind compass
   drawWind(needle);
 }
+
+function updateWeatherIcon(wfIcon){
+switch(wfIcon){
+case 'cc-clear-day': icon = 'wi-day-sunny'; break;
+case 'cc-clear-night': icon = 'wi-night-clear'; break;
+default: icon = wfIcon;
+}
+if (icon==wfIcon){
+iconHTML = "No Icon: " + icon;}
+else{
+iconHTML = "<i class=\"wi "+ icon + "\"></i>";
+}
+
+updateHTML("conditions-icon",iconHTML);
+
+}
