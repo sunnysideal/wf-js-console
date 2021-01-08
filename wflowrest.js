@@ -28,7 +28,7 @@ updateHTML('sea_level_pressure',unitConvert(currentConditions['sea_level_pressur
 //console.log(currentConditions['icon']);
 updateWeatherIcon(currentConditions['icon']);
 
-console.log(currentConditions);
+
 
 }// end getTodayObs
 

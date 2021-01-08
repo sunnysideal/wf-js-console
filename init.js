@@ -277,14 +277,36 @@ function launchConsole(config) {
  * Utility scripts
  ***********************************************/
 async function populateSunRiseSet(latitude, longitude) {
-  let sunTimes = SunCalc.getTimes(new Date(), latitude, longitude);
+  today = new Date();
+  tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+
+  let sunTimes = SunCalc.getTimes(today, latitude, longitude);
+  let tomorrowSunTimes = SunCalc.getTimes(tomorrow, latitude, longitude);
+
+  lengthToday = sunTimes.sunset.getTime() - sunTimes.sunrise.getTime(); //in milliseconds
+  lengthTomorrow = tomorrowSunTimes.sunset.getTime() - tomorrowSunTimes.sunrise.getTime(); //in milliseconds
+  diffDayLength = lengthTomorrow-lengthToday; // in milliseconds
+
 
   let sunriseStr = getHumanTimeHHMM(sunTimes.sunrise.getTime() / 1000);
   let sunsetStr = getHumanTimeHHMM(sunTimes.sunset.getTime() / 1000);
   let solarNoonStr = getHumanTimeHHMM(sunTimes.solarNoon.getTime() / 1000);
+  let tomorrowSunriseStr = getHumanTimeHHMM(tomorrowSunTimes.sunrise.getTime() / 1000);
+  let tomorrowSunsetStr = getHumanTimeHHMM(tomorrowSunTimes.sunset.getTime() / 1000);
+  let tomorrowSolarNoonStr = getHumanTimeHHMM(tomorrowSunTimes.solarNoon.getTime() / 1000);
   updateHTML('sunrise_time', sunriseStr);
   updateHTML('sunset_time', sunsetStr);
   updateHTML('solarnoon_time', solarNoonStr);
+  updateHTML('tomorrow_sunrise_time', tomorrowSunriseStr);
+  updateHTML('tomorrow_sunset_time', tomorrowSunsetStr);
+  updateHTML('tomorrow_solarnoon_time', tomorrowSolarNoonStr);
+  if(diffDayLength>0){
+    updateHTML('solar_tomorrow_text', getHumanTimeMMSS(diffDayLength/1000)+" longer");
+  }
+  else {
+    updateHTML('solar_tomorrow_text', getHumanTimeMMSS(-diffDayLength/1000)+" shorter");
+  }
 }
 
 // update element HTML
@@ -403,7 +425,7 @@ function updateValues(observation, index) {
 // update unit labels given the labels chosen in the WF app
 // ********************************************************
 async function updateUnitLabels(units) {
-  console.log(units);
+  
   for (unit in units) {
 
     switch (unit) {
@@ -691,6 +713,12 @@ function getHumanTimeHHMM(epoch) {
 
   return time;
 }
+function getHumanTimeMMSS(epoch) {
+  var d = new Date(epoch * 1000);
+  time = pad(d.getMinutes(), 2) + ":" + pad(d.getSeconds(), 2);
+
+  return time;
+}
 
 // properties for the wind needle
 var needle = {
@@ -881,8 +909,8 @@ function browserResize() {
 
 function updateWeatherIcon(wfIcon){
 switch(wfIcon){
-case 'cc-clear-day': icon = 'wi-day-sunny'; break;
-case 'cc-clear-night': icon = 'wi-night-clear'; break;
+case 'clear-day': icon = 'wi-day-sunny'; break;
+case 'clear-night': icon = 'wi-night-clear'; break;
 default: icon = wfIcon;
 }
 if (icon==wfIcon){
