@@ -1,109 +1,140 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-<link rel="stylesheet" href="console.css"> <!-- load console.css after chartist -->
-<title>Test Weather</title>
+	<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">-->
+	<link rel="stylesheet" href="css/weather-icons.min.css">
+	<link rel="stylesheet" href="console.css"> <!-- load console.css after chartist -->
+	<title>Wx-Wf Console</title>
 </head>
+
 <body onresize="browserResize()">
 
-<div id="console" class="console-container" >
-
-	
-	<div class="grid-tl temperature-container ">
-		<div class="air-temperature-title obs-title">Temperature</div>
-		<div class="air-temperature"><span class="air_temperature">-.-</span><span class="units_temp">--</span></div>
-		<div class="feels-like-title obs-title">Wind Chill</div>
-		<div class="feels-like"><span class="canada_feels_like">-.-</span><span class="units_temp">--</span></div>
-		<div class="air-temperature-min"><span class="air_temperature_min" >-.-</span><span class="units_temp">--</span></div>
-		<div class="air-temperature-min-time"><span class="air_temperature_min_time">--.--</span></div>		
-		<div class="air-temperature-max"><span class="air_temperature_max" >-.-</span><span class="units_temp">--</span></div>
-		<div class="air-temperature-max-time"><span class="air_temperature_max_time">--.--</span></div>
-	</div>
-	
+	<div id="console" class="console-container">
 
 
-	<div class="grid-tr wind-container"> 	
-		
-		<div class="chart-title obs-title">Wind</div>
-		<div class="wind-holder">
-		<div class="wind-compass"><canvas id="wind"  ></canvas></div>
-		
-		
-		<div class="wind-compass-container" >
-			<div class="wind-gust-title">gust</div>
-			<div class="wind-gust"><span class="wind_gust"></span></div>
-			<div class="wind-avg-title">avg</div>
-			<div class="wind-avg"><span class="wind_avg"></span></div>
-			
+		<div class="grid-tl temperature-container ">
+			<div class="air-temperature-title obs-title">Temperature</div>
+			<div class="air-temperature"><span class="air_temperature">-.-</span><span class="units_temp">--</span></div>
+			<div class="feels-like-title obs-title">Wind Chill</div>
+			<div class="feels-like"><span class="canada_feels_like">-.-</span><span class="units_temp">--</span></div>
+			<div class="air-temperature-min"><span class="air_temperature_min">-.-</span><span class="units_temp">--</span></div>
+			<div class="air-temperature-min-time"><span class="air_temperature_min_time">--.--</span></div>
+			<div class="air-temperature-max"><span class="air_temperature_max">-.-</span><span class="units_temp">--</span></div>
+			<div class="air-temperature-max-time"><span class="air_temperature_max_time">--.--</span></div>
 		</div>
+
+
+
+		<div class="grid-tr">
+			<div class="wind-container">
+
+			<div class="chart-title obs-title">Wind</div>
+			<div class="wind-holder">
+				<div class="wind-compass"><canvas id="wind"></canvas></div>
+
+
+				<div class="wind-compass-container">
+					<div class="wind-gust-title">gust</div>
+					<div class="wind-gust"><span class="wind_gust"></span></div>
+					<div class="wind-avg-title">avg</div>
+					<div class="wind-avg"><span class="wind_avg"></span></div>
+
+				</div>
+			</div>
+			<div class="wind-beaufort"><span class="beaufort_description">BWS</span></div>
+</div>
 		</div>
-		<div class="wind-beaufort"><span class="beaufort_description">BWS</span></div>
-			
-	</div>
-	<div class="grid-tm conditions"><span class="conditions">Conditions/Forecast</span></div>
-	
 
+		<div class="grid-tm ">
+			<div class="conditions-container">
+			<div class="conditions-title obs-title"><span  class="conditions_title">Current Conditions</span></div>
+<div class="conditions-icon" ></div>
+</div>
 
-	
-	
-	<div class="grid-mm" >
-		<div class="solar-container ">
-			<div class="obs-title"><span class="solar-title">Solar</span></div>
-			<div class="sunrise-image">rise</div>
-			<div class="sunset-image">set</div>
-			<div class="solarnoon-image">noon</div>
-			<div class = "solarnoon-time"><span class="solarnoon_time">time</span></div>
-			<div class = "sunrise-time"><span class="sunrise_time">time</span></div>
-			<div class="sunset-time"><span class="sunset_time">time</span></div>
 		</div>
-	</div>
-
-
-
-	<div class="grid-ml rain-container" >
-		<div class="chart-title obs-title">Rainfall</div>
-		<div class="chart" ></div>
-	</div>
 
 
 
 
-	<div class="grid-mr pressure-container" >
+
+		<div class="grid-mm">
+			<div class="rain-container">
+				<div class="obs-title">Rainfall</div>
+				<div>Rain last interval: <span class='rain_accumulated'></span> <span class="units_precip"></span></div>
+				<div>Rain Today: <span class='local_daily_rain_accumm'></span> <span class="units_precip"></span></div>
+				<div>Rain type: <span class='precipitation_type'></span></div>
+			</div>
+
+		</div>
+
+
+
+		<div class="grid-ml">
+			<div class="solar-container ">
+				<div class=" obs-title"><span class="solar-title">Solar</span></div>
+
+				<div class="sunrise-image"><i class="wi wi-sunrise"></i></div>
+				<div class="sunset-image"><i class="wi wi-sunset"></i></div>
+				<div class="solarnoon-image"><i class="wi wi-day-sunny"></i></div>
+
+				<div class="today-solarnoon-time"><span class="solarnoon_time">time</span></div>
+				<div class="today-sunrise-time"><span class="sunrise_time">time</span></div>
+				<div class="today-sunset-time"><span class="sunset_time">time</span></div>
+
+				<div class="solar-tomorrow-title"><span class="solar_tomorrow_title">Tomorrow</span></div>
+				<div class="tomorrow-solarnoon-time"><span class="tomorrow_solarnoon_time">--.--</span></div>
+				<div class="tomorrow-sunrise-time"><span class="tomorrow_sunrise_time">--.--</span></div>
+				<div class="tomorrow-sunset-time"><span class="tomorrow_sunset_time">--.--</span></div>
+				<div class="solar-tomorrow-text">Tomorrow will be <span class="solar_tomorrow_text">--.-- longer</span> than today</div>
+				<div class="illuminance-title">illuminance</div>
+				<div class="uv-title">uv</div>
+				<div class="solar-radiation-title">solar radiation</div>
+				<div class="illuminance-value"><span class='illuminance'></span> lux</div>
+				<div class="uv-value"><span class='uv'></span></div>
+				<div class="solar-radiation"><span class='solar_radiation'></span> W/m&sup2;</div>
+			</div>
+		</div>
+
+
+
+
+		<div class="grid-mr pressure-container">
 			<div class="chart_title obs_title">Barometer</div>
 			<div class="pressure-obs">Pressure: <span class="sea_level_pressure">--</span> <span class="units_pressure"></span></div>
-			<div class="pressure-trend">Pressure Trend: <span class="pressure_trend"</span></div>
-		<div class="chart" ></div>
+			<div class="pressure-trend">Pressure Trend: <span class="pressure_trend" </span></div>
+			<div class="chart"></div>
 		</div>
 
 
-	<div class="grid-bl battery-container">
-		<div class="battery-title obs-title"  >Battery: <span class="battery">-.---</span> V     Power Mode: <span class="power_mode"></span></div>
+		<div class="grid-bl battery-container">
+			<div class="battery-title obs-title">Battery: <span class="battery">-.---</span> V Power Mode: <span class="power_mode"></span></div>
+
+		</div>
+
+		<div class="grid-bm date-container ">
+			<div class="date"><span class="obs_date">Date</span> <span class="obs_time">Time</span></div>
+
+		</div>
+
+
+		<div class="grid-br">
+
+		</div>
 
 	</div>
+	<div id="settings" class="settings">
+		<form>
+			<label for="wfPersonalToken">Personal Token</label>
+			<input type="text" id="wfPersonalToken" name="wfPersonalToken">
 
-	<div class="grid-bm date-container ">
-		<div class="date"><span class="obs_date">Date</span> <span class="obs_time">Time</span></div>
+			<input type="button" value="Clear" onclick="clearConfig()">
+			<input type="button" value="Proceed" onclick="saveConfig()">
 
+		</form>
 	</div>
-
-
-	<div class="grid-br">
-
-	</div>
-
-</div>
-<div id="settings" class="settings">
-<form>
-	<label for="wfPersonalToken">Personal Token</label>
-	<input type="text" id="wfPersonalToken" name="wfPersonalToken">
-
-	<input type="button" value="Clear" onclick="clearConfig()">
-	<input type="button" value="Proceed" onclick="saveConfig()">
-	
-</form>
-</div>
-<script src="init.js" type='text/javascript'></script>
+	<script src="init.js" type='text/javascript'></script>
 </body>
+
 </html>
