@@ -202,9 +202,9 @@ font-size:60%;
 }
 */
 
-.sunrise-image {font-size:100%;grid-area: image-rise;text-align:center;align-self:end; }
-.solarnoon-image {font-size:100%;grid-area: image-noon; text-align:center;align-self: center;}
-.sunset-image {font-size:100%;grid-area: image-set;text-align:center;align-self:end; }
+.sunrise-image {color:orange;font-size:100%;grid-area: image-rise;text-align:center;align-self:end; }
+.solarnoon-image {color:gold;font-size:100%;grid-area: image-noon; text-align:center;align-self: center;}
+.sunset-image {color:darkorange;font-size:100%;grid-area: image-set;text-align:center;align-self:end; }
 
 .today-sunrise-time {font-size:70%;grid-area: today-time-rise;text-align:center;}
 .today-solarnoon-time {font-size:70%;grid-area:today-time-noon;text-align:center;}
