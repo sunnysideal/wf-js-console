@@ -202,16 +202,16 @@ font-size:60%;
 }
 */
 
-.sunrise-image {font-size:100%;grid-area: image-rise;text-align:center;align-self:end; }
-.solarnoon-image {font-size:100%;grid-area: image-noon; text-align:center;align-self: center;}
-.sunset-image {font-size:100%;grid-area: image-set;text-align:center;align-self:end; }
+.sunrise-image {color:orange;font-size:100%;grid-area: image-rise;text-align:center;align-self:end; }
+.solarnoon-image {color:gold;font-size:100%;grid-area: image-noon; text-align:center;align-self: center;}
+.sunset-image {color:darkorange;font-size:100%;grid-area: image-set;text-align:center;align-self:end; }
 
-.today-sunrise-time {font-size:60%;grid-area: today-time-rise;text-align:center;}
-.today-solarnoon-time {font-size:60%;grid-area:today-time-noon;text-align:center;}
-.today-sunset-time {font-size:60%;grid-area: today-time-set;text-align:center;}
-.tomorrow-sunrise-time {font-size:60%;grid-area: tomorrow-time-rise;text-align:center;}
-.tomorrow-solarnoon-time {font-size:60%;grid-area:tomorrow-time-noon;text-align:center;}
-.tomorrow-sunset-time {font-size:60%;grid-area: tomorrow-time-set;text-align:center;}
+.today-sunrise-time {font-size:70%;grid-area: today-time-rise;text-align:center;}
+.today-solarnoon-time {font-size:70%;grid-area:today-time-noon;text-align:center;}
+.today-sunset-time {font-size:70%;grid-area: today-time-set;text-align:center;}
+.tomorrow-sunrise-time {font-size:55%;grid-area: tomorrow-time-rise;text-align:center;}
+.tomorrow-solarnoon-time {font-size:55%;grid-area:tomorrow-time-noon;text-align:center;}
+.tomorrow-sunset-time {font-size:55%;grid-area: tomorrow-time-set;text-align:center;}
 
 .solar-today-title {font-size:60%;grid-area:today-title;text-align:center;}
 .solar-tomorrow-title {font-size:40%;grid-area:tomorrow-title;text-align:center;align-self: end;}

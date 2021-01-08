@@ -425,7 +425,7 @@ function updateValues(observation, index) {
 // update unit labels given the labels chosen in the WF app
 // ********************************************************
 async function updateUnitLabels(units) {
-  
+
   for (unit in units) {
 
     switch (unit) {
@@ -911,6 +911,24 @@ function updateWeatherIcon(wfIcon){
 switch(wfIcon){
 case 'clear-day': icon = 'wi-day-sunny'; break;
 case 'clear-night': icon = 'wi-night-clear'; break;
+case 'cloudy': icon = 'wi-cloudy'; break;
+case 'foggy': icon = 'wi-fog'; break;
+case 'partly-cloudy-day': icon = 'wi-day-cloudy'; break;
+case 'partly-cloudy-night': icon = 'wi-night-alt-cloudy'; break;
+case 'possibly-rainy-day': icon = 'wi-day-rain'; break;
+case 'possibly-rainy-night': icon = 'wi-night-alt-rain'; break;
+case 'possibly-sleet-day': icon = 'wi-day-sleet'; break;
+case 'possibly-sleet-night': icon = 'wi-night-alt-sleet'; break;
+case 'possibly-snow-day': icon = 'wi-day-snow'; break;
+case 'possibly-snow-night': icon = 'wi-night-alt-snow'; break;
+case 'possibly-thunderstorm-day': icon = 'wi-day-thunderstorm'; break;
+case 'possibly-thunderstorm-night': icon = 'wi-night-snow-thunderstorm'; break;
+case 'rainy': icon = 'wi-rain'; break;
+case 'sleet': icon = 'wi-sleet'; break;
+case 'snow': icon = 'wi-snow'; break;
+case 'thunderstorm': icon = 'wi-thunderstorm'; break;
+case 'windy': icon = 'wi-windy'; break;
+
 default: icon = wfIcon;
 }
 if (icon==wfIcon){
