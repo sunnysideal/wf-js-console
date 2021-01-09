@@ -250,7 +250,7 @@ async function getWFConfig(wfPersonalToken) {
 function launchConsole(config) {
   // hide settings html and show console grid
   toggleSettingsPage(false);
-  initCanvas('wind'); // initialise the wind compass canvas
+
 
   //load scripts in order, waiting to make sure data has arrived
   loadScript('suncalc.js')
@@ -259,9 +259,12 @@ function launchConsole(config) {
     //		.then(() => loadScript('https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js'))
     //.then(() => loadScript('https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'))
     .then(() => loadScript('wfparse.js'))
+    .then(() => loadScript('gauges.js'))
     .then(() => loadScript('wflowrest.js'))
     .then(() => loadScript('wflowsocket.js'))
     .then(() => populateSunRiseSet(config['latitude'], config['longitude']))
+    .then(() => initCanvas('wind'))  // initialise the wind compass canvas
+    .then(() => initCanvas('barometer'))  // initialise the barometer canvas
     .then(() => getDailySummaryObs(config))
     .then(() => getInitialDaily(config))
     .then(() => launchSockets(config['units']))
@@ -734,38 +737,7 @@ var needle = {
   bfDesc: ""
 }
 
-// initialise canvas to size of parent
-function initCanvas(canvasID) {
 
-  //get canvas
-  let canvas = document.getElementById(canvasID);
-
-  //get context
-  let ctx = canvas.getContext('2d');
-
-  function parentWidth(elem) {
-    return elem.parentElement.clientWidth;
-  }
-
-  function parentHeight(elem) {
-    return elem.parentElement.clientHeight;
-  }
-
-  // gets width and height of parent and sets canvas to match
-  parentWidth = parentWidth(document.getElementById(canvasID));
-  parentHeight = parentHeight(document.getElementById(canvasID));
-  canvasWidth = parentWidth;
-  canvasHeight = parentHeight;
-
-  // scale canvas to match screen for sharpness
-  scale = window.devicePixelRatio;
-  canvas.style.width = canvasWidth + "px";
-  canvas.style.height = canvasHeight + "px";
-  canvas.width = canvasWidth * scale;
-  canvas.height = canvasHeight * scale;
-  ctx.scale(scale, scale);
-  // now that canvas is initialised it can be drawn on
-}
 
 
 // draws the wind compass based on the values in needle
@@ -905,6 +877,8 @@ const months = [
 function browserResize() {
   initCanvas('wind'); //need to get new size of canvas and redraw the wind compass
   drawWind(needle);
+  initCanvas('barometer');
+  drawRoundGauge('barometer', currentConditions['sea_level_pressure'], 160, 380, 950, 1050, unitLabels['units_pressure']);
 }
 
 function updateHourlyForecast(forecast,hour){

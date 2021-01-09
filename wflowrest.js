@@ -24,7 +24,7 @@ console.log(currentConditions['pressure_trend']);
 */
 updateHTML('pressure_trend',currentConditions['pressure_trend']);
 updateHTML('sea_level_pressure',unitConvert(currentConditions['sea_level_pressure'],'sea_level_pressure'));
-
+drawRoundGauge('barometer', unitConvert(currentConditions['sea_level_pressure'],'sea_level_pressure'), 160, 380, unitConvert(950,'sea_level_pressure'), unitConvert(1050,'sea_level_pressure'), unitLabels['units_pressure']);
 //console.log(currentConditions['icon']);
 
 iconHTML = "<i class=\"wi "+ convertWeatherIcon(currentConditions['icon']) + "\"></i>";

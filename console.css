@@ -50,6 +50,23 @@ body, html {
 
 }
 
+.barometer {grid-area: baro;position:relative;width:100%;height:100%;}
+.pressure-trend {grid-area: trend;width:100%;height:100%;text-align: center;}
+
+
+.pressure-container {
+	display:grid;
+	position:relative;
+	padding: 0.3em;
+	width: 100%;
+	height: 100%;
+	grid-template-areas:
+			" baro"
+			" trend";
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: minmax(0, 1fr) minmax(0, 0.1fr);
+
+}
 .obs-title{
 	color: var(--titles-colour); grid-area:obs-title;font-size:90%; text-align:center;
 }
