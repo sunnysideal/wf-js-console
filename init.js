@@ -907,7 +907,28 @@ function browserResize() {
   drawWind(needle);
 }
 
-function updateWeatherIcon(wfIcon){
+function updateHourlyForecast(forecast,hour){
+  if (Number(forecast['local_hour'])>12){
+    forecastTime = Number(forecast['local_hour'])-12;
+  }
+  else if(Number(forecast['local_hour'])==0){
+    forecastTime = 12;
+  }
+  else {
+    forecastTime = Number(forecast['local_hour'])
+  }
+
+  updateHTML('forecast-hour-'+(hour+1)+'-icon',"<i class=\"wi "+ convertWeatherIcon(forecast['icon']) + "\"></i>");
+  updateHTML('forecast-hour-'+(hour+1)+'-time',"<i class=\"wi wi-time-"+ forecastTime + "\"></i>");
+
+updateHTML('forecast-hour-'+(hour+1)+'-temp', forecast['air_temperature']+" "+unitLabels['units_temp']);
+
+updateHTML('forecast-hour-'+(hour+1)+'-precip-percent', forecast['precip_probability'] + "%");
+updateHTML('forecast-hour-'+(hour+1)+'-wind-spd',forecast['wind_avg']+" "+ unitLabels['units_wind']);
+updateHTML('forecast-hour-'+(hour+1)+'-wind-dir',"<i class=\"wi wi-wind wi-from-"+forecast['wind_direction_cardinal'].toLowerCase() +"\"></i>" );
+}
+
+function convertWeatherIcon(wfIcon){
 switch(wfIcon){
 case 'clear-day': icon = 'wi-day-sunny'; break;
 case 'clear-night': icon = 'wi-night-clear'; break;
@@ -931,12 +952,5 @@ case 'windy': icon = 'wi-windy'; break;
 
 default: icon = wfIcon;
 }
-if (icon==wfIcon){
-iconHTML = "No Icon: " + icon;}
-else{
-iconHTML = "<i class=\"wi "+ icon + "\"></i>";
-}
-
-updateHTML("conditions-icon",iconHTML);
-
+return icon;
 }

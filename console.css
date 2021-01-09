@@ -5,9 +5,15 @@
 	--page-text-colour: #DDDDDD;
 	--titles-colour: #FFFFFF;
 	--page-background-colour: #222222;
-	--observation-background-colour: #242424;
+	--observation-background-colour: #292929;
 	--wind-needle-colour: #FF5555;
 	--wind-gauge-colour: #0077bb;
+}
+
+*{
+padding: 0px;
+margin: 0px;
+box-sizing: border-box;
 }
 
 /*
@@ -17,10 +23,10 @@ settings div hidden by default
 	display:none;
 	position:relative;
 	background-color:#ffffff;
-	margin:auto;
-	padding: 1% 0;
-	width: 98%;
-	height: 96%;
+
+	padding: 0.5em;
+	width: 100%;
+	height: 100%;
 }
 
 .ct-series-a .ct-line {
@@ -39,6 +45,9 @@ body, html {
 	color: var(--page-text-colour);
 	font-size: 2vw;
 	position:relative;
+	align-content: center;
+	align-items: center;
+
 }
 
 .obs-title{
@@ -75,12 +84,13 @@ font-size:60%;
 .temperature-container {
 	display:grid;
 	position:relative;
+	padding: 0.3em;
 	width: 100%;
 	height: 100%;
 	grid-template-columns: repeat(12,1fr);
-	grid-template-rows: minmax(0, 10%) minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 		grid-template-areas:
-			" title title title title title title title title title title title title "
+
 			" deg deg deg deg deg deg deg deg deg deg deg deg"
 			" feels-title feels-title  feels-title feels-title feels-title feels-title feels-title feels-title feels-title feels-title feels-title feels-title "
 			" feels feels feels feels feels feels feels feels feels feels feels feels"
@@ -123,6 +133,7 @@ font-size:60%;
 .wind-container {
 	display:grid;
 	position:relative;
+	padding: 0.3em;
 	width: 100%;
 	height: 100%;
 	grid-template-columns: minmax(0, 1fr);
@@ -134,22 +145,48 @@ font-size:60%;
     justify-content: center;
     align-items: center;
     font-size: 500%; }
-/*style="text-align:center;display: flex;
-    justify-content: center;
-    align-items: center;"
-*/
+
+.forecast-hour-1-time {grid-area:forecast-hour-1-time;text-align:center;font-size: 200%;}
+.forecast-hour-2-time {grid-area:forecast-hour-2-time;text-align:center;font-size: 200%;}
+.forecast-hour-3-time {grid-area:forecast-hour-3-time;text-align:center;font-size: 200%;}
+
+.forecast-hour-1-icon {grid-area:forecast-hour-1-icon;text-align:center;font-size: 200%;}
+.forecast-hour-2-icon {grid-area:forecast-hour-2-icon;text-align:center;font-size: 200%;}
+.forecast-hour-3-icon {grid-area:forecast-hour-3-icon;text-align:center;font-size: 200%;}
+
+.forecast-hour-1-temp {grid-area:forecast-hour-1-temp;text-align:center;}
+.forecast-hour-2-temp {grid-area:forecast-hour-2-temp;text-align:center;}
+.forecast-hour-3-temp {grid-area:forecast-hour-3-temp;text-align:center;}
+
+.forecast-hour-1-precip-percent {grid-area:forecast-hour-1-precip-percent;text-align:center;font-size: 80%;}
+.forecast-hour-2-precip-percent {grid-area:forecast-hour-2-precip-percent;text-align:center;font-size: 80%;}
+.forecast-hour-3-precip-percent {grid-area:forecast-hour-3-precip-percent;text-align:center;font-size: 80%;}
+
+.forecast-hour-1-wind-dir {grid-area:forecast-hour-1-wind-dir;text-align:center;align-self:end;font-size: 150%;}
+.forecast-hour-2-wind-dir {grid-area:forecast-hour-2-wind-dir;text-align:center;align-self:end;font-size: 150%;}
+.forecast-hour-3-wind-dir {grid-area:forecast-hour-3-wind-dir;text-align:center;align-self:end;font-size: 150%;}
+
+.forecast-hour-1-wind-spd {grid-area:forecast-hour-1-wind-spd;text-align:center;font-size: 80%;}
+.forecast-hour-2-wind-spd {grid-area:forecast-hour-2-wind-spd;text-align:center;font-size: 80%;}
+.forecast-hour-3-wind-spd {grid-area:forecast-hour-3-wind-spd;text-align:center;font-size: 80%;}
 
 .conditions-container {
 	display:grid;
 	position:relative;
 		width: 100%;
 	height: 100%;
+	padding: 0.3em;
 	grid-template-areas:
-			"obs-title obs-title obs-title"
-			"current-icon current-icon current-icon";
+
+			"forecast-hour-1-time	forecast-hour-2-time forecast-hour-3-time"
+		"forecast-hour-1-icon forecast-hour-2-icon forecast-hour-3-icon"
+		" forecast-hour-1-temp forecast-hour-2-temp forecast-hour-3-temp"
+"forecast-hour-1-precip-percent forecast-hour-2-precip-percent forecast-hour-3-precip-percent"
+"forecast-hour-1-wind-dir forecast-hour-2-wind-dir forecast-hour-3-wind-dir"
+"forecast-hour-1-wind-spd forecast-hour-2-wind-spd forecast-hour-3-wind-spd";
 
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-	grid-template-rows: minmax(0, 10%) minmax(0, 1fr);
+	grid-template-rows: minmax(0, 1.5fr) minmax(0,1.5fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) ;
 }
 
 
@@ -158,7 +195,7 @@ font-size:60%;
 	position:relative;
 	width: 100%;
 	height: 100%;
-
+padding: 0.3em;
 
 	grid-template-columns: minmax(0, 1fr);
 	grid-template-rows: minmax(0, 1fr) minmax(0, 6fr) ;
@@ -230,10 +267,11 @@ font-size:60%;
 .solar-container {
 	display:grid;
 	position:relative;
-		width: 100%;
+	width: 100%;
 	height: 100%;
+padding: 0.3em;
 	grid-template-areas:
-			"obs-title obs-title obs-title"
+
 			"image-rise image-noon image-set"
 
             "today-time-rise today-time-noon today-time-set"
@@ -244,7 +282,7 @@ font-size:60%;
 						"title-illuminance title-uv title-solar-radiation"
 						"illuminance uv radiation";
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-	grid-template-rows: minmax(0, 10%) minmax(0, 0.7fr) auto  minmax(0, 0.4fr) minmax(0, 0.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: minmax(0, 0.7fr) auto  minmax(0, 0.4fr) minmax(0, 0.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .grid-tl {grid-area: top-left;background-color:var(--observation-background-colour);}
@@ -261,13 +299,14 @@ font-size:60%;
 
 .console-container {
 	display:grid;
-	margin:auto;
-	padding: 1% 0;
+
+	padding: 0.5em;
 	grid-row-gap: 1vh;
 	grid-column-gap: 1vh;
 	position:relative;
-	width: 98%;
-	height: 96%;
+
+	width: 100%;
+	height: 100%;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.1fr);
 	grid-template-areas:

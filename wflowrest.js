@@ -26,8 +26,14 @@ updateHTML('pressure_trend',currentConditions['pressure_trend']);
 updateHTML('sea_level_pressure',unitConvert(currentConditions['sea_level_pressure'],'sea_level_pressure'));
 
 //console.log(currentConditions['icon']);
-updateWeatherIcon(currentConditions['icon']);
 
+iconHTML = "<i class=\"wi "+ convertWeatherIcon(currentConditions['icon']) + "\"></i>";
+console.log(iconHTML);
+updateHTML("conditions-icon",iconHTML);
+
+for(x=0;x<3;x++){
+	updateHourlyForecast(forecastJson['forecast']['hourly'][x],x);
+}
 
 
 }// end getTodayObs

@@ -5,6 +5,7 @@
 
 	<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">-->
 	<link rel="stylesheet" href="css/weather-icons.min.css">
+	<link rel="stylesheet" href="css/weather-icons-wind.min.css">
 	<link rel="stylesheet" href="console.css"> <!-- load console.css after chartist -->
 	<title>Wx-Wf Console</title>
 </head>
@@ -15,7 +16,7 @@
 
 
 		<div class="grid-tl temperature-container ">
-			<div class="air-temperature-title obs-title">Temperature</div>
+			<div class="air-temperature-title obs-title"></div>
 			<div class="air-temperature"><span class="air_temperature">-.-</span><span class="units_temp">--</span></div>
 			<div class="feels-like-title obs-title">Wind Chill</div>
 			<div class="feels-like"><span class="canada_feels_like">-.-</span><span class="units_temp">--</span></div>
@@ -30,7 +31,7 @@
 		<div class="grid-tr">
 			<div class="wind-container">
 
-			<div class="chart-title obs-title">Wind</div>
+			<div class="chart-title obs-title"></div>
 			<div class="wind-holder">
 				<div class="wind-compass"><canvas id="wind"></canvas></div>
 
@@ -49,8 +50,24 @@
 
 		<div class="grid-tm ">
 			<div class="conditions-container">
-			<div class="conditions-title obs-title"><span  class="conditions_title">Current Conditions</span></div>
-<div class="conditions-icon" ></div>
+<div class="forecast-hour-1-time"></div>
+<div class="forecast-hour-2-time"></div>
+<div class="forecast-hour-3-time"></div>
+<div class="forecast-hour-1-icon"></div>
+<div class="forecast-hour-2-icon"></div>
+<div class="forecast-hour-3-icon"></div>
+<div class="forecast-hour-1-temp"></div>
+<div class="forecast-hour-2-temp"></div>
+<div class="forecast-hour-3-temp"></div>
+<div class="forecast-hour-1-precip-percent"></div>
+<div class="forecast-hour-2-precip-percent"></div>
+<div class="forecast-hour-3-precip-percent"></div>
+<div class="forecast-hour-1-wind-dir"></div>
+<div class="forecast-hour-2-wind-dir"></div>
+<div class="forecast-hour-3-wind-dir"></div>
+<div class="forecast-hour-1-wind-spd"></div>
+<div class="forecast-hour-2-wind-spd"></div>
+<div class="forecast-hour-3-wind-spd"></div>
 </div>
 
 		</div>
@@ -61,7 +78,7 @@
 
 		<div class="grid-mm">
 			<div class="rain-container">
-				<div class="obs-title">Rainfall</div>
+				<div class="obs-title"></div>
 				<div>Rain last interval: <span class='rain_accumulated'></span> <span class="units_precip"></span></div>
 				<div>Rain Today: <span class='local_daily_rain_accumm'></span> <span class="units_precip"></span></div>
 				<div>Rain type: <span class='precipitation_type'></span></div>
@@ -73,9 +90,7 @@
 
 		<div class="grid-ml">
 			<div class="solar-container ">
-				<div class=" obs-title"><span class="solar-title">Solar</span></div>
-
-				<div class="sunrise-image"><i class="wi wi-sunrise"></i></div>
+								<div class="sunrise-image"><i class="wi wi-sunrise"></i></div>
 				<div class="sunset-image"><i class="wi wi-sunset"></i></div>
 				<div class="solarnoon-image"><i class="wi wi-day-sunny"></i></div>
 
@@ -101,7 +116,7 @@
 
 
 		<div class="grid-mr pressure-container">
-			<div class="chart_title obs_title">Barometer</div>
+			<div class="chart_title obs_title"></div>
 			<div class="pressure-obs">Pressure: <span class="sea_level_pressure">--</span> <span class="units_pressure"></span></div>
 			<div class="pressure-trend">Pressure Trend: <span class="pressure_trend" </span></div>
 			<div class="chart"></div>
